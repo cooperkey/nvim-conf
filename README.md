@@ -83,7 +83,7 @@
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [vim-fugitive](https://github.com/tpope/vim-fugitive) | Git commands in Neovim |
+| [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim) | Git commands in Neovim |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git diff signs in gutter |
 
 ### Markdown
