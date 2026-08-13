@@ -17,6 +17,13 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.wrap = true
 
+-- Folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.local/state/nvim/undo"
@@ -30,14 +37,16 @@ vim.opt.scrolloff = 8
 
 vim.opt.cmdheight = 0
 
+
+
 -- ── Live theme watcher ────────────────────────────────────────────────────────
 local live_theme_file = vim.fn.expand("~/.cache/nvim-live-theme")
 
 local function apply_live_theme()
   local f = io.open(live_theme_file, "r")
   if not f then return end
-  local cs  = f:read("l")
-  local bg  = f:read("l")
+  local cs = f:read("l")
+  local bg = f:read("l")
   f:close()
 
   if not cs or cs == "" then return end
