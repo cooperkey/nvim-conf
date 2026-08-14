@@ -29,6 +29,17 @@ return {
       },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
+        providers = {
+          lsp = {
+            fallbacks = {},
+          },
+          path = {
+            fallbacks = {},
+          },
+          buffer = {
+            min_keyword_length = 0,
+          },
+        },
       },
     },
   },
@@ -94,13 +105,13 @@ return {
         vim.lsp.enable('rust_analyzer')
 
         local servers = {
-          clangd = { cmd = {'clangd'}, filetypes = {'c', 'cpp', 'objc', 'objcpp'} },
-          pyright = { cmd = {'pyright-langserver', '--stdio'}, filetypes = {'python'} },
-          html = { cmd = {'vscode-html-language-server', '--stdio'}, filetypes = {'html'} },
-          cssls = { cmd = {'vscode-css-language-server', '--stdio'}, filetypes = {'css', 'scss', 'less'} },
-          jsonls = { cmd = {'vscode-json-language-server', '--stdio'}, filetypes = {'json', 'jsonc'} },
-          ts_ls = { cmd = {'typescript-language-server', '--stdio'}, filetypes = {'javascript', 'javascriptreact', 'typescript', 'typescriptreact'} },
-          jdtls = { cmd = {'jdtls'}, filetypes = {'java'} },
+          clangd = { cmd = { 'clangd' }, filetypes = { 'c', 'cpp', 'objc', 'objcpp' } },
+          pyright = { cmd = { 'pyright-langserver', '--stdio' }, filetypes = { 'python' } },
+          html = { cmd = { 'vscode-html-language-server', '--stdio' }, filetypes = { 'html' } },
+          cssls = { cmd = { 'vscode-css-language-server', '--stdio' }, filetypes = { 'css', 'scss', 'less' } },
+          jsonls = { cmd = { 'vscode-json-language-server', '--stdio' }, filetypes = { 'json', 'jsonc' } },
+          ts_ls = { cmd = { 'typescript-language-server', '--stdio' }, filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
+          jdtls = { cmd = { 'jdtls' }, filetypes = { 'java' } },
         }
 
         for server, config in pairs(servers) do

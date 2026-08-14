@@ -1,5 +1,6 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>rs", [[:restart<CR>]], { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>so", [[:so<CR>]], { desc = "Restart nvim" })
 
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()

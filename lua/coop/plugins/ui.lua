@@ -65,8 +65,7 @@ return {
         },
       },
       popupmenu = {
-        enabled = true,
-        backend = "nui",
+        enabled = false,
       },
     },
   },

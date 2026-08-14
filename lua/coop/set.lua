@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.opt.confirm = true
+
 vim.g.autoformat = true
 
 vim.opt.ignorecase = true
