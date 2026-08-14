@@ -11,13 +11,13 @@ return {
         component_separators = { left = '', right = '' },
       },
       sections = {
-        lualine_a = { { 'mode', fmt = function(str) return str:sub(1,1) end } },
+        lualine_a = { { 'mode', fmt = function(str) return str:sub(1, 1) end } },
         lualine_b = { { 'filename', path = 1 } },
         lualine_c = { 'branch', 'diff', 'diagnostics' },
         lualine_x = {},
-        lualine_y = { 'progress', 'location' },
+        lualine_y = { 'progress' },
         lualine_z = { function()
-          return os.date(" %a %d %b  %H:%M")
+          return os.date(" %a %d %b %H:%M")
         end },
       },
     },
@@ -53,14 +53,14 @@ return {
             col = 0,
           },
           size = {
-            width = "50%",
+            width = "100%",
             height = "auto",
           },
           border = {
             style = "none",
           },
           win_options = {
-            winhighlight = "NormalFloat:Normal",
+            winhighlight = "NormalFloat:Normal,FloatBorder:Normal,FloatTitle:Normal,MsgArea:Normal",
           },
         },
       },
@@ -68,5 +68,9 @@ return {
         enabled = false,
       },
     },
+  },
+  {
+    "brenoprata10/nvim-highlight-colors",
+    opts = {},
   },
 }
