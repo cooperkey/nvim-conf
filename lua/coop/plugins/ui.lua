@@ -53,7 +53,7 @@ return {
             col = 0,
           },
           size = {
-            width = "100%",
+            width = "30%",
             height = "auto",
           },
           border = {
@@ -77,7 +77,7 @@ return {
     'akinsho/toggleterm.nvim',
     version = "*",
     opts = {
-      open_mapping = [[<leader>tr]],
+      open_mapping = [[<C-t>]],
       direction = "horizontal",
       size = 15,
     },
