@@ -22,5 +22,5 @@ return {
   { "danilo-augusto/vim-afterglow",        name = "afterglow",        lazy = true, priority = 1000 },
   { "romainl/Apprentice",                  name = "apprentice",       lazy = true, priority = 1000 },
   { "RRethy/nvim-base16",                  name = "base16",           lazy = true, priority = 1000 },
-  { "plan9-for-vimspace/acme-colors",       name = "acme",             lazy = true, priority = 1000 },
+  { "plan9-for-vimspace/acme-colors",      name = "acme",             lazy = true, priority = 1000 },
 }

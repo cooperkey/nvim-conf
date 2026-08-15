@@ -17,7 +17,7 @@ return {
         lualine_x = {},
         lualine_y = { 'progress' },
         lualine_z = { function()
-          return os.date(" %a %d %b %H:%M")
+          return os.date("%a %d %b %H:%M")
         end },
       },
     },
@@ -72,5 +72,14 @@ return {
   {
     "brenoprata10/nvim-highlight-colors",
     opts = {},
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    opts = {
+      open_mapping = [[<leader>tr]],
+      direction = "horizontal",
+      size = 15,
+    },
   },
 }
