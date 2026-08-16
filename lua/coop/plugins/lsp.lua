@@ -74,6 +74,7 @@ return {
         end,
       })
 
+
       if vim.lsp.config then
         vim.lsp.config('lua_ls', {
           cmd = { 'lua-language-server' },
@@ -109,7 +110,11 @@ return {
           html = { cmd = { 'vscode-html-language-server', '--stdio' }, filetypes = { 'html' } },
           cssls = { cmd = { 'vscode-css-language-server', '--stdio' }, filetypes = { 'css', 'scss', 'less' } },
           jsonls = { cmd = { 'vscode-json-language-server', '--stdio' }, filetypes = { 'json', 'jsonc' } },
-          ts_ls = { cmd = { 'typescript-language-server', '--stdio' }, filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
+          ts_ls = {
+            cmd = { 'typescript-language-server', '--stdio' },
+            filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+          },
+
           jdtls = { cmd = { 'jdtls' }, filetypes = { 'java' } },
         }
 

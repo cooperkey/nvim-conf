@@ -65,7 +65,8 @@ vim.keymap.set("n", "<leader>D", [["+dd]], { desc = " delete line to clipboard" 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
   { desc = "replace word on cursor" })
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
-vim.keymap.set("n", "<leader>n", [[:Telescope notify<CR>]], { desc = "open nofit" })
+vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
+
 vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open colorscheme" })
 
 
