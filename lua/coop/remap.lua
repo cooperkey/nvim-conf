@@ -69,8 +69,10 @@ vim.keymap.set("n", "<leader>n", [[:Telescope notify<CR>]], { desc = "open nofit
 vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open colorscheme" })
 
 
-
-
+function _G.set_terminal_keymaps()
+  local opts = { buffer = 0 }
+  vim.keymap.set('t', '<esc>', [[<c-\><c-n>]], opts)
+end
 
 -- Markdown
 vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle Markdown Preview" })
