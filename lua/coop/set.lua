@@ -19,6 +19,16 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.wrap = true
 
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking",
+  callback = function()
+    vim.highlight.on_yank()
+  end
+})
+
 -- Folding
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"

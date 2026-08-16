@@ -2,6 +2,16 @@ vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>rs", [[:restart<CR>]], { desc = "Restart nvim" })
 vim.keymap.set("n", "<leader>so", [[:so<CR>]], { desc = "Restart nvim" })
 
+
+-- Window Splits
+vim.keymap.set("n", "<M-v>", "<cmd>vsplit<cr>", { desc = "Split vertically" })
+vim.keymap.set("n", "<M-h>", "<cmd>split<cr>", { desc = "Split horizontally" })
+vim.keymap.set("n", "<M-q>", "<cmd>close<cr>", { desc = "Close current split window" })
+vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
+
+
+
+
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
@@ -15,11 +25,15 @@ vim.keymap.set({ "n", "v" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Do
 vim.keymap.set({ "n", "v" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 vim.keymap.set({ "n", "v" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 
--- move to window using the ^ hkjl keys
+-- move to window using Ctrl+hjkl or Alt+Arrows
 vim.keymap.set("n", "<c-h>", "<c-w>h", { desc = "go to left window", remap = true })
 vim.keymap.set("n", "<c-j>", "<c-w>j", { desc = "go to lower window", remap = true })
 vim.keymap.set("n", "<c-k>", "<c-w>k", { desc = "go to upper window", remap = true })
 vim.keymap.set("n", "<c-l>", "<c-w>l", { desc = "go to right window", remap = true })
+
+vim.keymap.set("n", "<m-n>", "<cmd>cnext<cr>", { desc = "Next quick fix", remap = true })
+vim.keymap.set("n", "<m-p>", "<cmd>cprev<cr>", { desc = "Next quick fix", remap = true })
+
 
 -- resize window
 vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "increase window height" })
