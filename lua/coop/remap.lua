@@ -6,7 +6,7 @@ vim.keymap.set("n", "<leader>so", [[:so<CR>]], { desc = "Restart nvim" })
 -- Window Splits
 vim.keymap.set("n", "<M-v>", "<cmd>vsplit<cr>", { desc = "Split vertically" })
 vim.keymap.set("n", "<M-h>", "<cmd>split<cr>", { desc = "Split horizontally" })
-vim.keymap.set("n", "<M-q>", "<cmd>close<cr>", { desc = "Close current split window" })
+vim.keymap.set({ "n", "t" }, "<M-q>", "<cmd>close<cr>", { desc = "Close current split window" })
 vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
 
 
@@ -69,10 +69,7 @@ vim.keymap.set("n", "<leader>n", [[:Telescope notify<CR>]], { desc = "open nofit
 vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open colorscheme" })
 
 
-function _G.set_terminal_keymaps()
-  local opts = { buffer = 0 }
-  vim.keymap.set('t', '<esc>', [[<c-\><c-n>]], opts)
-end
+vim.keymap.set('t', '<esc>', [[<c-\><c-n>]], { desc = "Normal layer in Terminal" })
 
 -- Markdown
 vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle Markdown Preview" })
