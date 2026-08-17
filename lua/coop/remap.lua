@@ -9,6 +9,24 @@ vim.keymap.set({ "n", "t" }, "<M-q>", "<cmd>close<cr>", { desc = "Close current 
 vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
 
 
+vim.keymap.set({ "x", "o" }, "ai", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@conditional.outer", "textobjects")
+end)
+vim.keymap.set({ "x", "o" }, "ii", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@conditional.inner", "textobjects")
+end)
+vim.keymap.set({ "x", "o" }, "af", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@function.outer", "textobjects")
+end)
+vim.keymap.set({ "x", "o" }, "if", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@function.inner", "textobjects")
+end)
+vim.keymap.set({ "x", "o" }, "ac", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@comment.outer", "textobjects")
+end)
+vim.keymap.set({ "x", "o" }, "ic", function()
+  require "nvim-treesitter-textobjects.select".select_textobject("@comment.inner", "textobjects")
+end)
 
 
 -- Clear search highlight on single Escape in Normal mode
@@ -63,8 +81,11 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Copy line to clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]], { desc = " delete to clipboard" })
 vim.keymap.set("n", "<leader>D", [["+dd]], { desc = " delete line to clipboard" })
 
+
 vim.keymap.set("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "replace word on cursor" })
+  { desc = "Replace word under cursor" })
+vim.keymap.set("v", "<leader>rs", [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]], { desc = "Replace selected text" })
+
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
 vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
 
