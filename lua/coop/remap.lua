@@ -1,5 +1,4 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
-vim.keymap.set("n", "<leader>rs", [[:restart<CR>]], { desc = "Restart nvim" })
 vim.keymap.set("n", "<leader>so", [[:so<CR>]], { desc = "Restart nvim" })
 
 
@@ -32,7 +31,9 @@ vim.keymap.set("n", "<c-k>", "<c-w>k", { desc = "go to upper window", remap = tr
 vim.keymap.set("n", "<c-l>", "<c-w>l", { desc = "go to right window", remap = true })
 
 vim.keymap.set("n", "<m-n>", "<cmd>cnext<cr>", { desc = "Next quick fix", remap = true })
-vim.keymap.set("n", "<m-p>", "<cmd>cprev<cr>", { desc = "Next quick fix", remap = true })
+vim.keymap.set("n", "<m-p>", "<cmd>cprev<cr>", { desc = "Previous quick fix", remap = true })
+vim.keymap.set("n", "<m-o>p", "<cmd>copen<cr>", { desc = "Open quick fix", remap = true })
+vim.keymap.set("n", "<m-o>s", "<cmd>cclose<cr>", { desc = "Close quick fix", remap = true })
 
 
 -- resize window
@@ -62,7 +63,7 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Copy line to clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]], { desc = " delete to clipboard" })
 vim.keymap.set("n", "<leader>D", [["+dd]], { desc = " delete line to clipboard" })
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+vim.keymap.set("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
   { desc = "replace word on cursor" })
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
 vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
