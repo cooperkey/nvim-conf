@@ -4,9 +4,9 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = "Telescope",
     keys = {
-      { "<leader><leader>", function() require("telescope.builtin").find_files() end, desc = "Open telescope" },
-      { "<C-p>", function() require("telescope.builtin").git_files() end, desc = "Open git files" },
-      { "<leader>/", function() require("telescope.builtin").grep_string() end, desc = "Grep search" },
+      { "<leader><leader>", function() require("telescope.builtin").find_files() end,  desc = "Open telescope" },
+      { "<C-p>",            function() require("telescope.builtin").git_files() end,   desc = "Open git files" },
+      { "<leader>/",        function() require("telescope.builtin").grep_string() end, desc = "Grep search" },
     },
     opts = {
       defaults = {
@@ -39,6 +39,7 @@ return {
       telescope.setup(opts)
       pcall(telescope.load_extension, "notify")
       pcall(telescope.load_extension, "noice")
+      pcall(telescope.load_extension, "fzf")
     end,
   },
 }
