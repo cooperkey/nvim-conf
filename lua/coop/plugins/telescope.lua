@@ -6,7 +6,8 @@ return {
     keys = {
       { "<leader><leader>", function() require("telescope.builtin").find_files() end,  desc = "Open telescope" },
       { "<C-p>",            function() require("telescope.builtin").git_files() end,   desc = "Open git files" },
-      { "<leader>/",        function() require("telescope.builtin").grep_string() end, desc = "Grep search" },
+      { "<leader>/",        function() require("telescope.builtin").live_grep() end,  desc = "Live grep search" },
+      { "<leader>gw",       function() require("telescope.builtin").grep_string() end, desc = "Grep word under cursor" },
     },
     opts = {
       defaults = {

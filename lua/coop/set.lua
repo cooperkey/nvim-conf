@@ -136,3 +136,12 @@ _G.set_markdown_highlight()
 vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
   callback = _G.set_markdown_highlight,
 })
+
+-- ── File Save Notification ──────────────────────────────────────────────────
+vim.api.nvim_create_autocmd("BufWritePost", {
+  desc = "Notify when saving a file",
+  callback = function(ev)
+    local filename = vim.fn.fnamemodify(ev.file, ":t")
+    vim.notify("Saved " .. filename, vim.log.levels.INFO, { title = "Buffer Saved" })
+  end,
+})

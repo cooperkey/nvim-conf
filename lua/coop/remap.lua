@@ -8,7 +8,7 @@ vim.keymap.set("n", "<M-h>", "<cmd>split<cr>", { desc = "Split horizontally" })
 vim.keymap.set({ "n", "t" }, "<M-q>", "<cmd>close<cr>", { desc = "Close current split window" })
 vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
 
-
+-- textobjects from treesitter
 vim.keymap.set({ "x", "o" }, "ai", function()
   require "nvim-treesitter-textobjects.select".select_textobject("@conditional.outer", "textobjects")
 end)
