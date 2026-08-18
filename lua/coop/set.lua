@@ -145,3 +145,20 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     vim.notify("Saved " .. filename, vim.log.levels.INFO, { title = "Buffer Saved" })
   end,
 })
+
+-- ── Auto Filetype & Treesitter Detection ──────────────────────────────────
+vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "BufWritePre" }, {
+  desc = "Auto-detect filetype on shebang or new script creation",
+  callback = function(ev)
+    if not vim.api.nvim_buf_is_valid(ev.buf) then return end
+    local first_line = (vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] or "")
+    if vim.bo[ev.buf].filetype == "" or first_line:match("^#!") then
+      local old_ft = vim.bo[ev.buf].filetype
+      vim.cmd("filetype detect")
+      local new_ft = vim.bo[ev.buf].filetype
+      if new_ft ~= "" and new_ft ~= old_ft then
+        pcall(vim.treesitter.start, ev.buf)
+      end
+    end
+  end,
+})
