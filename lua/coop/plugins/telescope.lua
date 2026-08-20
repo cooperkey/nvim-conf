@@ -7,28 +7,32 @@ return {
       {
         "<leader><leader>",
         function()
-          require("telescope.builtin").find_files()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").find_files({ cwd = dir })
         end,
         desc = "Open telescope",
       },
       {
         "<C-p>",
         function()
-          require("telescope.builtin").git_files()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").git_files({ cwd = dir })
         end,
         desc = "Open git files",
       },
       {
         "<leader>/",
         function()
-          require("telescope.builtin").live_grep()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").live_grep({ cwd = dir })
         end,
         desc = "Live grep search",
       },
       {
         "<leader>gw",
         function()
-          require("telescope.builtin").grep_string()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").grep_string({ cwd = dir })
         end,
         desc = "Grep word under cursor",
       },
