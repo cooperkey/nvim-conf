@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking",
   callback = function()
     vim.highlight.on_yank()
-  end
+  end,
 })
 
 -- Folding
@@ -48,20 +48,22 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 
 vim.opt.cmdheight = 0
-vim.opt.autoread = true
-
 
 -- ── Live theme watcher ────────────────────────────────────────────────────────
 local live_theme_file = vim.fn.expand("~/.cache/nvim-live-theme")
 
 local function apply_live_theme()
   local f = io.open(live_theme_file, "r")
-  if not f then return end
+  if not f then
+    return
+  end
   local cs = f:read("l")
   local bg = f:read("l")
   f:close()
 
-  if not cs or cs == "" then return end
+  if not cs or cs == "" then
+    return
+  end
 
   vim.schedule(function()
     if bg == "light" or bg == "dark" then
@@ -83,18 +85,26 @@ vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     vim.fn.mkdir(vim.fn.expand("~/.cache"), "p")
     local watcher = vim.uv.new_fs_event()
-    if not watcher then return end
+    if not watcher then
+      return
+    end
 
     local function watch()
       watcher:start(live_theme_file, {}, function(err, _, _)
         watcher:stop()
-        if not err then apply_live_theme() end
+        if not err then
+          apply_live_theme()
+        end
         vim.defer_fn(watch, 50)
       end)
     end
 
     local function try_arm()
-      if vim.fn.filereadable(live_theme_file) == 1 then watch() else vim.defer_fn(try_arm, 1000) end
+      if vim.fn.filereadable(live_theme_file) == 1 then
+        watch()
+      else
+        vim.defer_fn(try_arm, 1000)
+      end
     end
     try_arm()
   end,
@@ -150,7 +160,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "BufWritePre" }, {
   desc = "Auto-detect filetype on shebang or new script creation",
   callback = function(ev)
-    if not vim.api.nvim_buf_is_valid(ev.buf) then return end
+    if not vim.api.nvim_buf_is_valid(ev.buf) then
+      return
+    end
     local first_line = (vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] or "")
     if vim.bo[ev.buf].filetype == "" or first_line:match("^#!") then
       local old_ft = vim.bo[ev.buf].filetype

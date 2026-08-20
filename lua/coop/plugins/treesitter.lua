@@ -5,12 +5,12 @@ return {
     lazy = false,
     build = ":TSUpdate",
 
-
     config = function()
       local ok, configs = pcall(require, "nvim-treesitter.configs")
       if ok then
         configs.setup({
-          ensure_installed = { "bash",
+          ensure_installed = {
+            "bash",
             "c",
             "diff",
             "html",
@@ -34,7 +34,8 @@ return {
             "vim",
             "vimdoc",
             "xml",
-            "yaml", },
+            "yaml",
+          },
           sync_install = false,
           auto_install = true,
           highlight = {
@@ -51,7 +52,6 @@ return {
     init = function()
       vim.g.no_plugin_maps = true
     end,
-    config = function()
-    end,
+    config = function() end,
   },
 }

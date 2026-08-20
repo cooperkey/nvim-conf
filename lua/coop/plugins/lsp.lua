@@ -25,7 +25,11 @@ return {
         ['<Tab>'] = { 'accept', 'fallback' },
       },
       completion = {
-        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 0 },
+        trigger = {
+          show_on_keyword = true,
+          show_on_trigger_character = true,
+        },
       },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
@@ -107,16 +111,16 @@ return {
         local servers = {
           clangd = { cmd = { 'clangd' }, filetypes = { 'c', 'cpp', 'objc', 'objcpp' } },
           pyright = {
-            cmd = { 'basedpyright-langserver', '--stdio' },
+            cmd = { 'pyright-langserver', '--stdio' },
             filetypes = { 'python' },
             settings = {
-              basedpyright = {
+              python = {
                 analysis = {
-                  autoSearchPaths = true,
-                  useLibraryCodeForTypes = true,
+                  autoSearchPaths = false,
+                  useLibraryCodeForTypes = false,
                   diagnosticMode = 'openFilesOnly',
                   indexing = false,
-                  typeCheckingMode = 'basic',
+                  typeCheckingMode = 'off',
                 },
               },
             },

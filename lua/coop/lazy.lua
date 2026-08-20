@@ -11,4 +11,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("coop.plugins")
+local custom_path = vim.fn.expand("~/.config/custom/current/theme/neovim.lua")
+local has_custom = vim.uv.fs_stat(custom_path) ~= nil
+local custom = has_custom and require("coop.custom") or nil
+
+require("lazy").setup({
+  { import = "coop.plugins" },
+  has_custom and custom.get_specs() or {},
+})
+
+if has_custom then
+  custom.setup()
+end

@@ -4,10 +4,38 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = "Telescope",
     keys = {
-      { "<leader><leader>", function() require("telescope.builtin").find_files() end,  desc = "Open telescope" },
-      { "<C-p>",            function() require("telescope.builtin").git_files() end,   desc = "Open git files" },
-      { "<leader>/",        function() require("telescope.builtin").live_grep() end,  desc = "Live grep search" },
-      { "<leader>gw",       function() require("telescope.builtin").grep_string() end, desc = "Grep word under cursor" },
+      {
+        "<leader><leader>",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").find_files({ cwd = dir })
+        end,
+        desc = "Open telescope",
+      },
+      {
+        "<C-p>",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").git_files({ cwd = dir })
+        end,
+        desc = "Open git files",
+      },
+      {
+        "<leader>/",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").live_grep({ cwd = dir })
+        end,
+        desc = "Live grep search",
+      },
+      {
+        "<leader>gw",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          require("telescope.builtin").grep_string({ cwd = dir })
+        end,
+        desc = "Grep word under cursor",
+      },
     },
     opts = {
       defaults = {

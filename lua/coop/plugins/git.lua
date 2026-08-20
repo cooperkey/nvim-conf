@@ -16,7 +16,14 @@ return {
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+      {
+        "<leader>gg",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          require("lazygit").lazygit(dir)
+        end,
+        desc = "LazyGit",
+      },
     },
   },
   {

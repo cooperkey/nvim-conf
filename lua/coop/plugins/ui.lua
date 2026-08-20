@@ -41,11 +41,6 @@ return {
       },
     },
     opts = {
-      lsp = {
-        progress = {
-          enabled = false,
-        },
-      },
       cmdline = {
         view = "cmdline",
       },
