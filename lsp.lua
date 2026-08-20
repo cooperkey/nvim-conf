@@ -25,11 +25,7 @@ return {
         ['<Tab>'] = { 'accept', 'fallback' },
       },
       completion = {
-        documentation = { auto_show = true, auto_show_delay_ms = 0 },
-        trigger = {
-          show_on_keyword = true,
-          show_on_trigger_character = true,
-        },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
@@ -110,21 +106,7 @@ return {
 
         local servers = {
           clangd = { cmd = { 'clangd' }, filetypes = { 'c', 'cpp', 'objc', 'objcpp' } },
-          pyright = {
-            cmd = { 'pyright-langserver', '--stdio' },
-            filetypes = { 'python' },
-            settings = {
-              python = {
-                analysis = {
-                  autoSearchPaths = false,
-                  useLibraryCodeForTypes = false,
-                  diagnosticMode = 'openFilesOnly',
-                  indexing = false,
-                  typeCheckingMode = 'off',
-                },
-              },
-            },
-          },
+          pyright = { cmd = { 'pyright-langserver', '--stdio' }, filetypes = { 'python' } },
           html = { cmd = { 'vscode-html-language-server', '--stdio' }, filetypes = { 'html' } },
           cssls = { cmd = { 'vscode-css-language-server', '--stdio' }, filetypes = { 'css', 'scss', 'less' } },
           jsonls = { cmd = { 'vscode-json-language-server', '--stdio' }, filetypes = { 'json', 'jsonc' } },
@@ -132,6 +114,7 @@ return {
             cmd = { 'typescript-language-server', '--stdio' },
             filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
           },
+
           jdtls = { cmd = { 'jdtls' }, filetypes = { 'java' } },
         }
 
