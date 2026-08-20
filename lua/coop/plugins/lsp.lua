@@ -106,7 +106,21 @@ return {
 
         local servers = {
           clangd = { cmd = { 'clangd' }, filetypes = { 'c', 'cpp', 'objc', 'objcpp' } },
-          pyright = { cmd = { 'pyright-langserver', '--stdio' }, filetypes = { 'python' } },
+          pyright = {
+            cmd = { 'basedpyright-langserver', '--stdio' },
+            filetypes = { 'python' },
+            settings = {
+              basedpyright = {
+                analysis = {
+                  autoSearchPaths = true,
+                  useLibraryCodeForTypes = true,
+                  diagnosticMode = 'openFilesOnly',
+                  indexing = false,
+                  typeCheckingMode = 'basic',
+                },
+              },
+            },
+          },
           html = { cmd = { 'vscode-html-language-server', '--stdio' }, filetypes = { 'html' } },
           cssls = { cmd = { 'vscode-css-language-server', '--stdio' }, filetypes = { 'css', 'scss', 'less' } },
           jsonls = { cmd = { 'vscode-json-language-server', '--stdio' }, filetypes = { 'json', 'jsonc' } },

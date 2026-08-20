@@ -127,20 +127,53 @@ vim.keymap.set("n", "<leader>s", "viw<esc>`>a~~<esc>`<i~~<esc>", { desc = "Strik
 vim.keymap.set("v", "<leader>ml", "<esc>`>a]()<esc>`<i[<esc>f(a", { desc = "Convert to link (Markdown)" })
 vim.keymap.set("n", "<leader>ml", "viw<esc>`>a]()<esc>`<i[<esc>f(a", { desc = "Convert word to link (Markdown)" })
 
-vim.keymap.set("n", "<leader>x", function()
-  local line = vim.api.nvim_get_current_line()
-  if line:match("%-%s*%[ %]") then
-    line = line:gsub("%-%s*%[ %]", "- [x]", 1)
-    vim.notify("✓ Checklist item checked", vim.log.levels.INFO)
-  elseif line:match("%-%s*%[x%]") or line:match("%-%s*%[X%]") then
-    line = line:gsub("%-%s*%[x%]", "- [ ]", 1)
-    line = line:gsub("%-%s*%[X%]", "- [ ]", 1)
-    vim.notify("○ Checklist item unchecked", vim.log.levels.INFO)
+vim.keymap.set({ "n", "v" }, "<leader>x", function()
+  local mode = vim.api.nvim_get_mode().mode
+  local start_line, end_line
+
+  if mode:sub(1, 1) == "v" or mode:sub(1, 1) == "V" or mode == "\22" then
+    vim.cmd("normal! \27")
+    start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
+    end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
   else
-    line = "- [ ] " .. line:gsub("^%s*", "")
-    vim.notify("+ Checklist item created", vim.log.levels.INFO)
+    start_line = vim.api.nvim_win_get_cursor(0)[1]
+    end_line = start_line
   end
-  vim.api.nvim_set_current_line(line)
+
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local updated_lines = {}
+  local count_checked = 0
+  local count_unchecked = 0
+  local count_created = 0
+
+  for _, line in ipairs(lines) do
+    if line:match("%-%s*%[ %]") then
+      line = line:gsub("%-%s*%[ %]", "- [x]", 1)
+      count_checked = count_checked + 1
+    elseif line:match("%-%s*%[x%]") or line:match("%-%s*%[X%]") then
+      line = line:gsub("%-%s*%[x%]", "- [ ]", 1)
+      line = line:gsub("%-%s*%[X%]", "- [ ]", 1)
+      count_unchecked = count_unchecked + 1
+    else
+      line = "- [ ] " .. line:gsub("^%s*", "")
+      count_created = count_created + 1
+    end
+    table.insert(updated_lines, line)
+  end
+
+  vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, updated_lines)
+
+  if #lines == 1 then
+    if count_checked > 0 then
+      vim.notify("✓ Checklist item checked", vim.log.levels.INFO)
+    elseif count_unchecked > 0 then
+      vim.notify("○ Checklist item unchecked", vim.log.levels.INFO)
+    else
+      vim.notify("+ Checklist item created", vim.log.levels.INFO)
+    end
+  else
+    vim.notify("Checklist updated (" .. #lines .. " lines)", vim.log.levels.INFO)
+  end
 end, { desc = "Toggle Markdown checklist" })
 
 vim.keymap.set("v", "<leader>cb", function()

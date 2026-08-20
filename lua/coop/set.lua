@@ -48,7 +48,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 
 vim.opt.cmdheight = 0
-
+vim.opt.autoread = true
 
 
 -- ── Live theme watcher ────────────────────────────────────────────────────────
