@@ -20,7 +20,11 @@ return {
         "<leader>gg",
         function()
           local dir = require("coop.util").get_context_dir()
-          require("lazygit").lazygit(dir)
+          if vim.fs.root(dir, ".git") then
+            require("lazygit").lazygit(dir)
+          else
+            require("lazygit").lazygit()
+          end
         end,
         desc = "LazyGit",
       },
