@@ -174,3 +174,15 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "BufWritePre" }, {
     end
   end,
 })
+
+-- ── Python PEP 8 Indentation (4 Spaces) ──────────────────────────────────
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  desc = "Enforce PEP 8 4-space indentation for Python",
+  callback = function()
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.expandtab = true
+  end,
+})
