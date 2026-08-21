@@ -122,11 +122,10 @@ function M.apply_theme()
 
   if package.loaded["lualine"] then
     pcall(function()
-      require("lualine").setup({
-        options = {
-          theme = "auto",
-        },
-      })
+      local lualine = require("lualine")
+      if type(lualine.refresh) == "function" then
+        lualine.refresh({ place = { "statusline" } })
+      end
     end)
   end
 

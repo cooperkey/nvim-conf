@@ -88,7 +88,9 @@ return {
     "andymass/vim-matchup",
     event = { "BufReadPost", "BufNewFile" },
     init = function()
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+      vim.g.matchup_matchparen_deferred = 1
+      vim.g.matchup_matchparen_hi_surround_always = 0
+      vim.g.matchup_matchparen_offscreen = { method = "status" }
     end,
   },
   {
@@ -101,7 +103,7 @@ return {
         symbol = "│",
         options = { try_as_border = true },
         draw = {
-          delay = 0,
+          delay = 20,
           animation = indentscope.gen_animation.none(),
         },
       }

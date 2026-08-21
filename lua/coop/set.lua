@@ -36,6 +36,20 @@ vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
+local fold_group = vim.api.nvim_create_augroup("FastFoldexpr", { clear = true })
+vim.api.nvim_create_autocmd("InsertEnter", {
+  group = fold_group,
+  callback = function()
+    vim.opt_local.foldmethod = "manual"
+  end,
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+  group = fold_group,
+  callback = function()
+    vim.opt_local.foldmethod = "expr"
+  end,
+})
+
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.local/state/nvim/undo"
@@ -48,9 +62,11 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 
 vim.opt.cmdheight = 0
+vim.opt.laststatus = 3
 
 -- ── Live theme watcher ────────────────────────────────────────────────────────
-local live_theme_file = vim.fn.expand("~/.cache/nvim-live-theme")
+local cache_dir = vim.fn.expand("~/.cache")
+local live_theme_file = cache_dir .. "/nvim-live-theme"
 
 local function apply_live_theme()
   local f = io.open(live_theme_file, "r")
@@ -83,30 +99,21 @@ apply_live_theme()
 vim.api.nvim_create_autocmd("VimEnter", {
   once = true,
   callback = function()
-    vim.fn.mkdir(vim.fn.expand("~/.cache"), "p")
+    vim.fn.mkdir(cache_dir, "p")
     local watcher = vim.uv.new_fs_event()
     if not watcher then
       return
     end
 
-    local function watch()
-      watcher:start(live_theme_file, {}, function(err, _, _)
-        watcher:stop()
-        if not err then
+    watcher:start(
+      cache_dir,
+      { recursive = false },
+      vim.schedule_wrap(function(err, filename, _)
+        if not err and (filename == "nvim-live-theme" or not filename) then
           apply_live_theme()
         end
-        vim.defer_fn(watch, 50)
       end)
-    end
-
-    local function try_arm()
-      if vim.fn.filereadable(live_theme_file) == 1 then
-        watch()
-      else
-        vim.defer_fn(try_arm, 1000)
-      end
-    end
-    try_arm()
+    )
   end,
 })
 
@@ -157,19 +164,19 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- ── Auto Filetype & Treesitter Detection ──────────────────────────────────
-vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "BufWritePre" }, {
-  desc = "Auto-detect filetype on shebang or new script creation",
+vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+  desc = "Auto-detect filetype on shebang for untyped buffers",
   callback = function(ev)
     if not vim.api.nvim_buf_is_valid(ev.buf) then
       return
     end
-    local first_line = (vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] or "")
-    if vim.bo[ev.buf].filetype == "" or first_line:match("^#!") then
-      local old_ft = vim.bo[ev.buf].filetype
-      vim.cmd("filetype detect")
-      local new_ft = vim.bo[ev.buf].filetype
-      if new_ft ~= "" and new_ft ~= old_ft then
-        pcall(vim.treesitter.start, ev.buf)
+    if vim.bo[ev.buf].filetype == "" then
+      local first_line = (vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] or "")
+      if first_line:match("^#!") then
+        vim.cmd("filetype detect")
+        if vim.bo[ev.buf].filetype ~= "" then
+          pcall(vim.treesitter.start, ev.buf)
+        end
       end
     end
   end,
