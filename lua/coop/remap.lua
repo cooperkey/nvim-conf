@@ -1,6 +1,23 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>so", [[:restart<CR>]], { desc = "Restart nvim" })
 
+-- Auto-indent on empty/blank lines when entering insert mode
+vim.keymap.set("n", "i", function()
+  if #vim.fn.getline(".") == 0 or vim.fn.getline("."):match("^%s*$") then
+    return [["_cc]]
+  else
+    return "i"
+  end
+end, { expr = true, desc = "Smart insert with auto-indent" })
+
+vim.keymap.set("n", "a", function()
+  if #vim.fn.getline(".") == 0 or vim.fn.getline("."):match("^%s*$") then
+    return [["_cc]]
+  else
+    return "a"
+  end
+end, { expr = true, desc = "Smart append with auto-indent" })
+
 
 -- Window Splits
 vim.keymap.set("n", "<M-v>", "<cmd>vsplit<cr>", { desc = "Split vertically" })
