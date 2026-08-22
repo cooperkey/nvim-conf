@@ -73,13 +73,4 @@ return {
     "brenoprata10/nvim-highlight-colors",
     opts = {},
   },
-  {
-    'akinsho/toggleterm.nvim',
-    version = "*",
-    opts = {
-      open_mapping = [[<C-t>]],
-      direction = "horizontal",
-      size = 15,
-    },
-  },
 }

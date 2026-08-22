@@ -100,16 +100,14 @@ vim.keymap.set("n", "<leader>D", [["+dd]], { desc = " delete line to clipboard" 
 
 
 vim.keymap.set("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "Replace word under cursor" })
-vim.keymap.set("v", "<leader>rs", [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]], { desc = "Replace selected text" })
+  { desc = "Replace word under cursor globally" })
+vim.keymap.set("v", "<leader>rs", [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]],
+  { desc = "Replace selected text in visual mode globally" })
 
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
 vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
 
 vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open colorscheme" })
-
-
-vim.keymap.set('t', '<esc>', [[<c-\><c-n>]], { desc = "Normal layer in Terminal" })
 
 -- Markdown
 vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle Markdown Preview" })
@@ -246,18 +244,6 @@ local function apply_md_keymaps(buf)
   map("n", "<leader>5", function() set_heading(5) end, "Heading 5 (Markdown)")
   map("n", "<leader>6", function() set_heading(6) end, "Heading 6 (Markdown)")
 
-  local function toggle_prefix(prefix)
-    local line = vim.api.nvim_get_current_line()
-    if line:sub(1, #prefix) == prefix then
-      vim.api.nvim_set_current_line(line:sub(#prefix + 1))
-    else
-      line = line:gsub("^#+%s*", ""):gsub("^>%s*", ""):gsub("^%-%s*", ""):gsub("^%d+%.%s*", "")
-      vim.api.nvim_set_current_line(prefix .. line)
-    end
-  end
-  map("n", "<leader>-", function() toggle_prefix("- ") end, "Bullet list item (Markdown)")
-  map("n", "<leader>o", function() toggle_prefix("1. ") end, "Ordered list item (Markdown)")
-  map("n", "<leader>q", function() toggle_prefix("> ") end, "Blockquote (Markdown)")
 
   local function follow_markdown_link()
     local line = vim.api.nvim_get_current_line()
@@ -383,7 +369,6 @@ local function apply_md_keymaps(buf)
   end
 
   map("n", "gl", follow_markdown_link, "Follow link under cursor (Markdown)")
-  map("n", "gx", follow_markdown_link, "Follow link under cursor (Markdown)")
   map("n", "<leader>mg", follow_markdown_link, "Follow link under cursor (Markdown)")
 
   map("n", "]]", function() vim.fn.search("^#\\+\\s", "W") end, "Next heading (Markdown)")
@@ -460,99 +445,6 @@ for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     apply_md_keymaps(buf)
   end
 end
-
--- ── 6. General Utilities ──────────────────────────────────────────────────
--- Floating Shortcuts Cheatsheet
-vim.keymap.set("n", "<leader>?", function()
-  local lines = {
-    "                                          ",
-    "   FORMATTING              n = word   v = selection  ",
-    "                                          ",
-    "   <leader> b      Bold                   ",
-    "   <leader> i      Italic                 ",
-    "   <leader> bi     Bold + Italic          ",
-    "   <leader> h      Highlight  (==)        ",
-    "   <leader> c      Inline code  (`)       ",
-    "   <leader> s      Strikethrough  (~~)    ",
-    "   <leader> mr     Remove formatting  [v] ",
-    "                                          ",
-    "   STRUCTURE                              ",
-    "                                          ",
-    "   <leader> 1/2/3  Heading H1 / H2 / H3  ",
-    "   <leader> -      Bullet list  (-)       ",
-    "   <leader> o      Ordered list  (1.)     ",
-    "   <leader> q      Blockquote  (>)        ",
-    "   <leader> x      Toggle / Create checkbox",
-    "   <leader> ml     Link  [word]()         ",
-    "   <leader> cb     Fenced code block  [v] ",
-    "   <leader> mt     Insert table           ",
-    "                                          ",
-    "   NAVIGATION                             ",
-    "                                          ",
-    "   gl / gx         Follow link under cursor",
-    "   <leader> mg     Follow link under cursor",
-    "   ]]              Next heading           ",
-    "   [[              Prev heading           ",
-    "                                          ",
-    "   TOOLS                                  ",
-    "                                          ",
-    "   <leader> mp     Toggle Markdown Preview ",
-    "   <leader> mP     Stop Markdown Preview   ",
-    "   <leader> mw     Word / line / char count",
-    "   <leader> mc     Choose highlight color ",
-    "                                          ",
-    "   CLIPBOARD                              ",
-    "                                          ",
-    "   <leader> P      Paste from Android     ",
-    "                                          ",
-    "   Press  q  or  <Esc>  to close         ",
-    "                                          ",
-  }
-
-  local width = 0
-  for _, l in ipairs(lines) do width = math.max(width, #l) end
-  width = math.min(width, vim.o.columns - 4)
-  local height = math.min(#lines, vim.o.lines - 4)
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  vim.bo[buf].modifiable = false
-  vim.bo[buf].bufhidden  = "wipe"
-
-  local win              = vim.api.nvim_open_win(buf, true, {
-    relative  = "editor",
-    width     = width,
-    height    = height,
-    row       = math.floor((vim.o.lines - height) / 2),
-    col       = math.floor((vim.o.columns - width) / 2),
-    style     = "minimal",
-    border    = "rounded",
-    title     = "  Shortcuts ",
-    title_pos = "center",
-  })
-  vim.wo[win].cursorline = true
-  vim.wo[win].wrap       = false
-
-  local ns               = vim.api.nvim_create_namespace("cheatsheet_hl")
-  local header_lines     = { 1, 11, 22, 27, 33, 35 }
-  for _, ln in ipairs(header_lines) do
-    vim.api.nvim_buf_add_highlight(buf, ns, "DiagnosticInfo", ln, 0, -1)
-  end
-  for i, line in ipairs(lines) do
-    local s, e = line:find("<leader>%s*%S+")
-    if s then vim.api.nvim_buf_add_highlight(buf, ns, "Statement", i - 1, s - 1, e) end
-    s, e = line:find("%]%]")
-    if s then vim.api.nvim_buf_add_highlight(buf, ns, "Statement", i - 1, s - 1, e) end
-    s, e = line:find("%[%[")
-    if s then vim.api.nvim_buf_add_highlight(buf, ns, "Statement", i - 1, s - 1, e) end
-  end
-
-  for _, key in ipairs({ "q", "<Esc>" }) do
-    vim.keymap.set("n", key, function()
-      vim.api.nvim_win_close(win, true)
-    end, { buffer = buf, nowait = true, silent = true })
-  end
-end, { desc = "Show shortcuts cheatsheet" })
 
 -- Insert Semicolon at End of Line
 vim.keymap.set("n", "<leader>;", "A;<esc>", { desc = "Append semicolon at EOL" })

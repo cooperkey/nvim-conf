@@ -84,15 +84,15 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     opts = {},
   },
-  {
-    "andymass/vim-matchup",
-    event = { "BufReadPost", "BufNewFile" },
-    init = function()
-      vim.g.matchup_matchparen_deferred = 1
-      vim.g.matchup_matchparen_hi_surround_always = 0
-      vim.g.matchup_matchparen_offscreen = { method = "status" }
-    end,
-  },
+  -- {
+  --   "andymass/vim-matchup",
+  --   event = { "BufReadPost", "BufNewFile" },
+  --   init = function()
+  --     vim.g.matchup_matchparen_deferred = 1
+  --     vim.g.matchup_matchparen_hi_surround_always = 0
+  --     vim.g.matchup_matchparen_offscreen = { method = "status" }
+  --   end,
+  -- },
   {
     "echasnovski/mini.indentscope",
     version = "*",
