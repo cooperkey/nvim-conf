@@ -18,6 +18,8 @@ vim.opt.expandtab = true
 
 vim.opt.smartindent = true
 vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.breakindent = true -- Preserves indentation on wrapped lines
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
