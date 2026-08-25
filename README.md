@@ -10,32 +10,6 @@
 - PHP + Composer
 - A [Nerd Font](https://www.nerdfonts.com/)
 
-## Structure
-
-```
-~/.config/nvim/
-├── init.lua                    # Entry point: require("coop")
-└── lua/
-    └── coop/
-        ├── init.lua            # Module loader
-        ├── set.lua             # Editor options
-        ├── remap.lua           # Keymaps & custom layers
-        ├── lazy.lua            # lazy.nvim bootstrap → imports coop.plugins
-        ├── unicode_catalogue.lua
-        └── plugins/
-            ├── colorschemes.lua
-            ├── lsp.lua
-            ├── telescope.lua
-            ├── treesitter.lua
-            ├── harpoon.lua
-            ├── git.lua
-            ├── oil.lua
-            ├── markdown.lua
-            ├── motion.lua
-            ├── ui.lua
-            ├── undotree.lua
-            └── formatting.lua
-```
 
 ## Plugins
 
