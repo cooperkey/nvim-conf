@@ -6,19 +6,26 @@ return {
       options = {
         globalstatus = true,
         icons_enabled = true,
-        theme = 'auto',
-        section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' },
+        theme = "auto",
+        section_separators = { left = "", right = "" },
+        component_separators = { left = "", right = "" },
       },
       sections = {
-        lualine_a = { { 'mode', fmt = function(str) return str:sub(1, 1) end } },
-        lualine_b = { { 'filename', path = 1 } },
-        lualine_c = { 'branch', 'diff', 'diagnostics' },
+        lualine_a = { {
+          "mode",
+          fmt = function(str)
+            return str:sub(1, 1)
+          end,
+        } },
+        lualine_b = { { "filename", path = 1 } },
+        lualine_c = { "branch", "diff", "diagnostics" },
         lualine_x = {},
-        lualine_y = { 'progress' },
-        lualine_z = { function()
-          return os.date("%a %d %b %H:%M")
-        end },
+        lualine_y = { "progress" },
+        lualine_z = {
+          function()
+            return os.date("%a %d %b %H:%M")
+          end,
+        },
       },
     },
   },

@@ -195,3 +195,18 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.expandtab = true
   end,
 })
+if vim.env.TMUX ~= nil then
+  local tmux_group = vim.api.nvim_create_augroup("TmuxStatusToggle", { clear = true })
+  vim.api.nvim_create_autocmd({ "VimEnter", "FocusGained" }, {
+    group = tmux_group,
+    callback = function()
+      vim.fn.system("tmux set status off")
+    end,
+  })
+  vim.api.nvim_create_autocmd({ "VimLeave", "FocusLost" }, {
+    group = tmux_group,
+    callback = function()
+      vim.fn.system("tmux set status on")
+    end,
+  })
+end
