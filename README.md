@@ -227,5 +227,6 @@ All formatters enforce **2-space indentation**.
 - Persistent undo (`~/.local/state/nvim/undo`)
 - No swap/backup files
 - `wrap = true` with visual-line `j/k` navigation
+- line-break true
 - Live colorscheme watcher via `~/.cache/nvim-live-theme`
 - Markdown `<mark>` tag concealment with custom highlight group
