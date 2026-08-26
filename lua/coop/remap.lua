@@ -18,7 +18,6 @@ vim.keymap.set("n", "a", function()
   end
 end, { expr = true, desc = "Smart append with auto-indent" })
 
-
 -- Window Splits
 vim.keymap.set("n", "<M-v>", "<cmd>vsplit<cr>", { desc = "Split vertically" })
 vim.keymap.set("n", "<M-h>", "<cmd>split<cr>", { desc = "Split horizontally" })
@@ -27,31 +26,29 @@ vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
 
 -- textobjects from treesitter
 vim.keymap.set({ "x", "o" }, "ai", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@conditional.outer", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
 end)
 vim.keymap.set({ "x", "o" }, "ii", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@conditional.inner", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
 end)
 vim.keymap.set({ "x", "o" }, "af", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@function.outer", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
 end)
 vim.keymap.set({ "x", "o" }, "if", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@function.inner", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
 end)
 vim.keymap.set({ "x", "o" }, "ac", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@comment.outer", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@comment.outer", "textobjects")
 end)
 vim.keymap.set({ "x", "o" }, "ic", function()
-  require "nvim-treesitter-textobjects.select".select_textobject("@comment.inner", "textobjects")
+  require("nvim-treesitter-textobjects.select").select_textobject("@comment.inner", "textobjects")
 end)
-
 
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
   return "<esc>"
 end, { expr = true, desc = "Escape and Clear hlsearch" })
-
 
 -- Navigate by visual display lines when text wraps (j/k and arrow keys)
 vim.keymap.set({ "n", "v" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
@@ -70,7 +67,6 @@ vim.keymap.set("n", "<m-p>", "<cmd>cprev<cr>", { desc = "Previous quick fix", re
 vim.keymap.set("n", "<m-o>p", "<cmd>copen<cr>", { desc = "Open quick fix", remap = true })
 vim.keymap.set("n", "<m-o>s", "<cmd>cclose<cr>", { desc = "Close quick fix", remap = true })
 
-
 -- resize window
 vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "increase window height" })
 vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "decrease window height" })
@@ -80,8 +76,6 @@ vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "increa
 -- commenting
 vim.keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add comment below" })
 vim.keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add comment below" })
-
-
 
 -- move highlighted part
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move highlighted part down" })
@@ -98,11 +92,18 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Copy line to clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]], { desc = " delete to clipboard" })
 vim.keymap.set("n", "<leader>D", [["+dd]], { desc = " delete line to clipboard" })
 
-
-vim.keymap.set("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "Replace word under cursor globally" })
-vim.keymap.set("v", "<leader>rs", [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]],
-  { desc = "Replace selected text in visual mode globally" })
+vim.keymap.set(
+  "n",
+  "<leader>rs",
+  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "Replace word under cursor globally" }
+)
+vim.keymap.set(
+  "v",
+  "<leader>rs",
+  [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]],
+  { desc = "Replace selected text in visual mode globally" }
+)
 
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
 vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
@@ -113,16 +114,30 @@ vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open 
 vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Toggle Markdown Preview" })
 
 -- oil.nvim
-vim.keymap.set("n", "<leader>e", function() require("oil").open() end, { desc = "File Explorer (oil)" })
-vim.keymap.set("n", "<leader>E", function() require("oil").open_float() end, { desc = "File Explorer float (oil)" })
-vim.keymap.set("n", "-", function() require("oil").open() end, { desc = "Open parent dir (oil)" })
+vim.keymap.set("n", "<leader>e", function()
+  require("oil").open()
+end, { desc = "File Explorer (oil)" })
+vim.keymap.set("n", "<leader>E", function()
+  require("oil").open_float()
+end, { desc = "File Explorer float (oil)" })
+vim.keymap.set("n", "-", function()
+  require("oil").open()
+end, { desc = "Open parent dir (oil)" })
 
 -- ── 5. Markdown Workflow Keymaps ──────────────────────────────────────────
 -- Global Markdown Shortcuts
-vim.keymap.set("v", "<leader>h", "<esc>`>a</mark><esc>`<i<mark><esc>",
-  { desc = "Highlight selection (Markdown)", nowait = true })
-vim.keymap.set("n", "<leader>h", "viw<esc>`>a</mark><esc>`<i<mark><esc>",
-  { desc = "Highlight word (Markdown)", nowait = true })
+vim.keymap.set(
+  "v",
+  "<leader>h",
+  "<esc>`>a</mark><esc>`<i<mark><esc>",
+  { desc = "Highlight selection (Markdown)", nowait = true }
+)
+vim.keymap.set(
+  "n",
+  "<leader>h",
+  "viw<esc>`>a</mark><esc>`<i<mark><esc>",
+  { desc = "Highlight word (Markdown)", nowait = true }
+)
 
 vim.keymap.set("v", "<leader>i", "<esc>`>a*<esc>`<i*<esc>", { desc = "Italic selection (Markdown)" })
 vim.keymap.set("n", "<leader>i", "viw<esc>`>a*<esc>`<i*<esc>", { desc = "Italic word (Markdown)" })
@@ -194,7 +209,7 @@ end, { desc = "Toggle Markdown checklist" })
 vim.keymap.set("v", "<leader>cb", function()
   vim.cmd("normal! \27")
   local start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
-  local end_line   = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
+  local end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
   vim.fn.append(end_line, "```")
   vim.fn.append(start_line - 1, "```")
   vim.api.nvim_win_set_cursor(0, { start_line, 3 })
@@ -203,18 +218,22 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
-    { name = "Red (Error)",              group = "DiagnosticError" },
-    { name = "Blue (Info)",              group = "DiagnosticInfo" },
-    { name = "Green (String)",           group = "String" },
-    { name = "Teal (Hint)",              group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
+    { name = "Red (Error)", group = "DiagnosticError" },
+    { name = "Blue (Info)", group = "DiagnosticInfo" },
+    { name = "Green (String)", group = "String" },
+    { name = "Teal (Hint)", group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
     prompt = "Select Markdown Highlight Color:",
-    format_item = function(item) return item.name end,
+    format_item = function(item)
+      return item.name
+    end,
   }, function(choice)
-    if not choice then return end
+    if not choice then
+      return
+    end
     vim.g.markdown_highlight_group = choice.group
     if _G.set_markdown_highlight then
       _G.set_markdown_highlight()
@@ -225,8 +244,12 @@ end, { desc = "Choose Highlight Color (Markdown)" })
 
 -- Buffer-local Markdown Keymaps & Helpers
 local function apply_md_keymaps(buf)
-  if not vim.api.nvim_buf_is_valid(buf) then return end
-  if vim.bo[buf].filetype ~= "markdown" then return end
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+  if vim.bo[buf].filetype ~= "markdown" then
+    return
+  end
 
   local function map(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
@@ -237,13 +260,24 @@ local function apply_md_keymaps(buf)
     line = line:gsub("^#+%s*", "")
     vim.api.nvim_set_current_line(string.rep("#", level) .. " " .. line)
   end
-  map("n", "<leader>1", function() set_heading(1) end, "Heading 1 (Markdown)")
-  map("n", "<leader>2", function() set_heading(2) end, "Heading 2 (Markdown)")
-  map("n", "<leader>3", function() set_heading(3) end, "Heading 3 (Markdown)")
-  map("n", "<leader>4", function() set_heading(4) end, "Heading 4 (Markdown)")
-  map("n", "<leader>5", function() set_heading(5) end, "Heading 5 (Markdown)")
-  map("n", "<leader>6", function() set_heading(6) end, "Heading 6 (Markdown)")
-
+  map("n", "<leader>1", function()
+    set_heading(1)
+  end, "Heading 1 (Markdown)")
+  map("n", "<leader>2", function()
+    set_heading(2)
+  end, "Heading 2 (Markdown)")
+  map("n", "<leader>3", function()
+    set_heading(3)
+  end, "Heading 3 (Markdown)")
+  map("n", "<leader>4", function()
+    set_heading(4)
+  end, "Heading 4 (Markdown)")
+  map("n", "<leader>5", function()
+    set_heading(5)
+  end, "Heading 5 (Markdown)")
+  map("n", "<leader>6", function()
+    set_heading(6)
+  end, "Heading 6 (Markdown)")
 
   local function follow_markdown_link()
     local line = vim.api.nvim_get_current_line()
@@ -254,7 +288,9 @@ local function apply_md_keymaps(buf)
     local init = 1
     while true do
       local s, e, label, url = line:find(pattern, init)
-      if not s then break end
+      if not s then
+        break
+      end
       table.insert(links, { start_col = s, end_col = e, label = label, url = url })
       init = e + 1
     end
@@ -371,20 +407,28 @@ local function apply_md_keymaps(buf)
   map("n", "gl", follow_markdown_link, "Follow link under cursor (Markdown)")
   map("n", "<leader>mg", follow_markdown_link, "Follow link under cursor (Markdown)")
 
-  map("n", "]]", function() vim.fn.search("^#\\+\\s", "W") end, "Next heading (Markdown)")
-  map("n", "[[", function() vim.fn.search("^#\\+\\s", "bW") end, "Prev heading (Markdown)")
+  map("n", "]]", function()
+    vim.fn.search("^#\\+\\s", "W")
+  end, "Next heading (Markdown)")
+  map("n", "[[", function()
+    vim.fn.search("^#\\+\\s", "bW")
+  end, "Prev heading (Markdown)")
 
   map("n", "<leader>mt", function()
     vim.ui.input({ prompt = "Rows: " }, function(rows_str)
       local rows = tonumber(rows_str)
-      if not rows or rows < 1 then return end
+      if not rows or rows < 1 then
+        return
+      end
       vim.ui.input({ prompt = "Cols: " }, function(cols_str)
         local cols = tonumber(cols_str)
-        if not cols or cols < 1 then return end
+        if not cols or cols < 1 then
+          return
+        end
         local headers, seps = {}, {}
         for c = 1, cols do
           headers[c] = " Column" .. c .. " "
-          seps[c]    = " --------------- "
+          seps[c] = " --------------- "
         end
         local tbl = {
           "|" .. table.concat(headers, "|") .. "|",
@@ -408,9 +452,11 @@ local function apply_md_keymaps(buf)
 
   map("n", "<leader>mw", function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    local text  = table.concat(lines, " ")
+    local text = table.concat(lines, " ")
     local words = 0
-    for _ in text:gmatch("%S+") do words = words + 1 end
+    for _ in text:gmatch("%S+") do
+      words = words + 1
+    end
     vim.notify(
       string.format("󰈙  Words: %d  ·  Lines: %d  ·  Chars: %d", words, #lines, #text:gsub("%s", "")),
       vim.log.levels.INFO
@@ -435,9 +481,11 @@ local function apply_md_keymaps(buf)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern  = "markdown",
-  group    = vim.api.nvim_create_augroup("markdown_workflow_keymaps", { clear = true }),
-  callback = function(ev) apply_md_keymaps(ev.buf) end,
+  pattern = "markdown",
+  group = vim.api.nvim_create_augroup("markdown_workflow_keymaps", { clear = true }),
+  callback = function(ev)
+    apply_md_keymaps(ev.buf)
+  end,
 })
 
 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -453,12 +501,18 @@ vim.keymap.set("i", "<A-;>", "<c-o>A;", { desc = "Append semicolon at EOL" })
 -- Unicode Catalogue & Input Layer
 vim.keymap.set("n", "<leader>U", function()
   local ok, cat = pcall(require, "coop.unicode_catalogue")
-  if ok then cat.open() else vim.notify("Unicode catalogue module missing", vim.log.levels.WARN) end
+  if ok then
+    cat.open()
+  else
+    vim.notify("Unicode catalogue module missing", vim.log.levels.WARN)
+  end
 end, { desc = "Unicode Catalogue" })
 
 local function unicode_layer()
   local was_insert = vim.fn.mode() == "i"
-  if was_insert then vim.cmd("stopinsert") end
+  if was_insert then
+    vim.cmd("stopinsert")
+  end
 
   local sbuf = vim.api.nvim_create_buf(false, true)
   vim.bo[sbuf].bufhidden = "wipe"
@@ -471,12 +525,14 @@ local function unicode_layer()
     local preview = ""
     if #digits > 0 then
       local cp = tonumber(digits, 16)
-      if cp then preview = "  →  " .. vim.fn.nr2char(cp) end
+      if cp then
+        preview = "  →  " .. vim.fn.nr2char(cp)
+      end
     end
     local hint = "  hex · <Enter> insert · <Esc> cancel  "
     local left = "  UNICODE  u" .. slots .. preview
-    local pad  = math.max(0, vim.o.columns - #left - #hint)
-    local bar  = left .. string.rep(" ", pad) .. hint
+    local pad = math.max(0, vim.o.columns - #left - #hint)
+    local bar = left .. string.rep(" ", pad) .. hint
 
     vim.api.nvim_buf_set_lines(sbuf, 0, -1, false, { bar })
     vim.api.nvim_buf_clear_namespace(sbuf, hl_ns, 0, -1)
@@ -489,38 +545,42 @@ local function unicode_layer()
   render("")
 
   swin = vim.api.nvim_open_win(sbuf, false, {
-    relative  = "editor",
-    row       = vim.o.lines - 2,
-    col       = 0,
-    width     = vim.o.columns,
-    height    = 1,
-    style     = "minimal",
+    relative = "editor",
+    row = vim.o.lines - 2,
+    col = 0,
+    width = vim.o.columns,
+    height = 1,
+    style = "minimal",
     focusable = false,
-    zindex    = 250,
+    zindex = 250,
   })
   vim.wo[swin].winhl = "Normal:PmenuSel,NormalFloat:PmenuSel"
   vim.cmd("redraw")
 
-  local digits  = ""
-  local result  = nil
+  local digits = ""
+  local result = nil
 
-  local key_bs  = vim.api.nvim_replace_termcodes("<BS>", true, true, true)
-  local key_bk  = vim.api.nvim_replace_termcodes("<Backspace>", true, true, true)
+  local key_bs = vim.api.nvim_replace_termcodes("<BS>", true, true, true)
+  local key_bk = vim.api.nvim_replace_termcodes("<Backspace>", true, true, true)
   local key_del = vim.api.nvim_replace_termcodes("<Del>", true, true, true)
 
   while true do
     local ok, c = pcall(vim.fn.getcharstr)
-    if not ok then break end
+    if not ok then
+      break
+    end
 
     if c == "\27" then
       break
     elseif c == "\r" or c == "\n" then
       if #digits > 0 then
         local cp = tonumber(digits, 16)
-        if cp then result = vim.fn.nr2char(cp) end
+        if cp then
+          result = vim.fn.nr2char(cp)
+        end
       end
       break
-    elseif (c == "\8" or c == "\127" or c == "\b" or c == key_bs or c == key_bk or c == key_del or c == "\27[3~") then
+    elseif c == "\8" or c == "\127" or c == "\b" or c == key_bs or c == key_bk or c == key_del or c == "\27[3~" then
       if #digits > 0 then
         digits = digits:sub(1, -2)
       end
@@ -591,8 +651,12 @@ vim.keymap.set("n", "<leader>k", function()
 
     local lhs = utils.display_termcodes(entry.lhs)
     local attr = ""
-    if entry.noremap ~= 0 then attr = attr .. "*" end
-    if entry.buffer ~= 0 then attr = attr .. "@" end
+    if entry.noremap ~= 0 then
+      attr = attr .. "*"
+    end
+    if entry.buffer ~= 0 then
+      attr = attr .. "@"
+    end
 
     local raw_mode = (entry.mode or " "):gsub("%s+", "")
     local m_str = "[" .. raw_mode .. "]"
@@ -604,9 +668,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs,   "Special" },
-          { attr,  "Comment" },
-          { desc,  "Normal" },
+          { lhs, "Special" },
+          { attr, "Comment" },
+          { desc, "Normal" },
         })
       end,
     }, {})
@@ -630,3 +694,27 @@ vim.keymap.set("n", "<leader>ck", function()
     vim.notify("Telescope not loaded", vim.log.levels.WARN)
   end
 end, { desc = "Search keymaps in config files" })
+
+-- Close current buffer (safe delete without breaking splits)
+vim.keymap.set("n", "<leader>bd", function()
+  local buf = vim.api.nvim_get_current_buf()
+  if vim.bo[buf].modified then
+    vim.notify("Buffer has unsaved changes", vim.log.levels.WARN)
+    return
+  end
+  vim.cmd("bprevious")
+  pcall(vim.api.nvim_buf_delete, buf, { force = false })
+end, { desc = "Close current buffer" })
+
+-- Close all other buffers except current
+vim.keymap.set("n", "<leader>bo", function()
+  local current = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+      if not vim.bo[buf].modified then
+        pcall(vim.api.nvim_buf_delete, buf, { force = false })
+      end
+    end
+  end
+  vim.notify("Cleaned inactive buffers", vim.log.levels.INFO)
+end, { desc = "Close other buffers" })
