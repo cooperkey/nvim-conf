@@ -695,7 +695,7 @@ vim.keymap.set("n", "<leader>ck", function()
   end
 end, { desc = "Search keymaps in config files" })
 
--- Close current buffer (safe delete without breaking splits)
+-- Close current buffer
 vim.keymap.set("n", "<leader>bd", function()
   local buf = vim.api.nvim_get_current_buf()
   if vim.bo[buf].modified then
