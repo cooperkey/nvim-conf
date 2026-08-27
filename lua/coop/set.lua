@@ -140,14 +140,16 @@ function _G.set_markdown_highlight()
   })
 end
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "FileType" }, {
-  pattern = { "*.md", "markdown" },
+local md_syntax_group = vim.api.nvim_create_augroup("MarkdownMarkSyntax", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  group = md_syntax_group,
+  pattern = "markdown",
   callback = function()
     vim.cmd([[
-      syntax match MarkdownMarkHide /<\/\?mark>/ conceal
-      syntax region MarkdownMarkText matchgroup=MarkdownMarkHide start=/<mark>/ end=/<\/mark>/ concealends
-      hi def link MarkdownMarkText RenderMarkdownInlineHighlight
-    ]])
+          syntax match MarkdownMarkHide /<\/\?mark>/ conceal
+          syntax region MarkdownMarkText matchgroup=MarkdownMarkHide start=/<mark>/ end=/<\/mark>/ concealends
+          hi def link MarkdownMarkText RenderMarkdownInlineHighlight
+        ]])
   end,
 })
 
@@ -166,7 +168,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- ── Auto Filetype & Treesitter Detection ──────────────────────────────────
-vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+vim.api.nvim_create_autocmd("BufWritePost", {
   desc = "Auto-detect filetype on shebang for untyped buffers",
   callback = function(ev)
     if not vim.api.nvim_buf_is_valid(ev.buf) then
@@ -200,13 +202,13 @@ if vim.env.TMUX ~= nil then
   vim.api.nvim_create_autocmd({ "VimEnter", "FocusGained" }, {
     group = tmux_group,
     callback = function()
-      vim.fn.system("tmux set status off")
+      vim.system({ "tmux", "set", "status", "off" })
     end,
   })
   vim.api.nvim_create_autocmd({ "VimLeave", "FocusLost" }, {
     group = tmux_group,
     callback = function()
-      vim.fn.system("tmux set status on")
+      vim.system({ "tmux", "set", "status", "on" })
     end,
   })
 end

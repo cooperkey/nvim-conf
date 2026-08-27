@@ -80,4 +80,91 @@ return {
     "brenoprata10/nvim-highlight-colors",
     opts = {},
   },
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+    config = function()
+      local hl_groups = {
+        'DashboardHeader',
+        'DashboardCenter',
+        'DashboardShortcut',
+        'DashboardKey',
+        'DashboardDesc',
+        'DashboardIcon',
+        'DashboardFiles',
+        'DashboardMruTitle',
+        'DashboardProjectTitle',
+      }
+      for _, group in ipairs(hl_groups) do
+        vim.api.nvim_set_hl(0, group, { link = 'Normal' })
+      end
+
+      local v = vim.version()
+      local version_str = string.format('nvim v%d.%d.%d', v.major, v.minor, v.patch)
+
+      local shortcuts = {
+        {
+          desc = 'insert',
+          group = 'Normal',
+          action = 'ene | startinsert',
+          key = 'i',
+        },
+        {
+          desc = 'config',
+          group = 'Normal',
+          action = "lua require('telescope.builtin').find_files({ cwd = vim.fn.stdpath('config') })",
+          key = 'c',
+        },
+        {
+          desc = 'quit',
+          group = 'Normal',
+          action = 'q',
+          key = 'q',
+        },
+      }
+
+      if package.loaded.lazy ~= nil or vim.fn.exists(':Lazy') == 2 then
+        table.insert(shortcuts, 2, {
+          desc = 'lazy',
+          group = 'Normal',
+          action = 'Lazy',
+          key = 'l',
+        })
+      end
+
+      if package.loaded.mason ~= nil or vim.fn.exists(':Mason') == 2 then
+        table.insert(shortcuts, 2, {
+          desc = 'mason',
+          group = 'Normal',
+          action = 'Mason',
+          key = 'm',
+        })
+      end
+      require('dashboard').setup({
+        theme = 'hyper',
+        config = {
+          week_header = {
+            enable = false,
+          },
+          header = {
+            '',
+            version_str,
+            '',
+          },
+          shortcut = shortcuts,
+          mru = {
+            limit = 10,
+            icon = ' ',
+            label = ' ',
+            cwd_only = true,
+          },
+          project = {
+            enable = false,
+          },
+          footer = {},
+        },
+      })
+    end,
+  },
 }

@@ -72,11 +72,6 @@ vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "increase window he
 vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "decrease window height" })
 vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "decrease window width" })
 vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "increase window width" })
-
--- commenting
-vim.keymap.set("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add comment below" })
-vim.keymap.set("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add comment below" })
-
 -- move highlighted part
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move highlighted part down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part down" })
@@ -218,11 +213,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
-    { name = "Red (Error)", group = "DiagnosticError" },
-    { name = "Blue (Info)", group = "DiagnosticInfo" },
-    { name = "Green (String)", group = "String" },
-    { name = "Teal (Hint)", group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
+    { name = "Red (Error)",              group = "DiagnosticError" },
+    { name = "Blue (Info)",              group = "DiagnosticInfo" },
+    { name = "Green (String)",           group = "String" },
+    { name = "Teal (Hint)",              group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -668,9 +663,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs, "Special" },
-          { attr, "Comment" },
-          { desc, "Normal" },
+          { lhs,   "Special" },
+          { attr,  "Comment" },
+          { desc,  "Normal" },
         })
       end,
     }, {})

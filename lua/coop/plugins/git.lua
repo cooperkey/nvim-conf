@@ -10,9 +10,9 @@ return {
       "LazyGitFilterCurrentFile",
     },
     -- optional for floating window border decoration
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
+    -- dependencies = {
+    --   "nvim-lua/plenary.nvim",
+    -- },
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
@@ -34,17 +34,17 @@ return {
     "lewis6991/gitsigns.nvim",
     opts = {
       signs = {
-        add = { text = "▎" },
+        add = { text = "+" },
         change = { text = "▎" },
-        delete = { text = "▎" },
+        delete = { text = "-" },
         topdelete = { text = "▎" },
         changedelete = { text = "▎" },
         untracked = { text = "▎" },
       },
       signs_staged = {
-        add = { text = "▎" },
+        add = { text = "+" },
         change = { text = "▎" },
-        delete = { text = "▎" },
+        delete = { text = "-" },
         topdelete = { text = "▎" },
         changedelete = { text = "▎" },
       },
