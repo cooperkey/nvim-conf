@@ -154,7 +154,7 @@ return {
           },
           shortcut = shortcuts,
           mru = {
-            limit = 10,
+            limit = 5,
             icon = ' ',
             label = ' ',
             cwd_only = true,

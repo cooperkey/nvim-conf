@@ -1,20 +1,20 @@
 return {
   { "williamboman/mason.nvim", opts = {} },
-  {
-    "L3MON4D3/LuaSnip",
-    build = "make install_jsregexp",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    config = function()
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end,
-  },
+  -- {
+  --   "L3MON4D3/LuaSnip",
+  --   build = "make install_jsregexp",
+  --   dependencies = { "rafamadriz/friendly-snippets" },
+  --   config = function()
+  --     require("luasnip.loaders.from_vscode").lazy_load()
+  --   end,
+  -- },
   {
     "Saghen/blink.cmp",
     version = "*",
     build = "cargo build --release",
     opts = {
       snippets = {
-        preset = 'luasnip',
+        preset = 'default',
       },
       keymap = {
         preset = 'none',

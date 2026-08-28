@@ -68,10 +68,10 @@ vim.keymap.set("n", "<m-o>p", "<cmd>copen<cr>", { desc = "Open quick fix", remap
 vim.keymap.set("n", "<m-o>s", "<cmd>cclose<cr>", { desc = "Close quick fix", remap = true })
 
 -- resize window
-vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "increase window height" })
-vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "decrease window height" })
-vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "decrease window width" })
-vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "increase window width" })
+vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "resize increase window height" })
+vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "resize decrease window height" })
+vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "resize decrease window width" })
+vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "resize increase window width" })
 -- move highlighted part
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move highlighted part down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part down" })
