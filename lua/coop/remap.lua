@@ -23,6 +23,8 @@ vim.keymap.set("n", "<M-v>", "<cmd>vsplit<cr>", { desc = "Split vertically" })
 vim.keymap.set("n", "<M-h>", "<cmd>split<cr>", { desc = "Split horizontally" })
 vim.keymap.set({ "n", "t" }, "<M-q>", "<cmd>close<cr>", { desc = "Close current split window" })
 vim.keymap.set("n", "<leader>,", "<c-^>", { desc = "Previous window" })
+vim.keymap.set("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
+vim.keymap.set("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 
 -- textobjects from treesitter
 vim.keymap.set({ "x", "o" }, "ai", function()
@@ -75,6 +77,9 @@ vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "resize
 -- move highlighted part
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move highlighted part down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part down" })
+
+vim.keymap.set("v", "<", "<gv", { desc = "indent left and reselect" })
+vim.keymap.set("v", ">", ">gv", { desc = "indent right and reselect" })
 
 vim.keymap.set("n", "J", "mzJ`z", { desc = "move below to same line of cursor" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down halfw1y" })
@@ -213,11 +218,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
-    { name = "Red (Error)",              group = "DiagnosticError" },
-    { name = "Blue (Info)",              group = "DiagnosticInfo" },
-    { name = "Green (String)",           group = "String" },
-    { name = "Teal (Hint)",              group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
+    { name = "Red (Error)", group = "DiagnosticError" },
+    { name = "Blue (Info)", group = "DiagnosticInfo" },
+    { name = "Green (String)", group = "String" },
+    { name = "Teal (Hint)", group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -663,9 +668,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs,   "Special" },
-          { attr,  "Comment" },
-          { desc,  "Normal" },
+          { lhs, "Special" },
+          { attr, "Comment" },
+          { desc, "Normal" },
         })
       end,
     }, {})

@@ -1,5 +1,4 @@
 {
-  "LuaSnip": { "branch": "master", "commit": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24" },
   "acme": { "branch": "master", "commit": "c2ae949144fc9d38cf16d9369b567c8918cf2a82" },
   "afterglow": { "branch": "master", "commit": "fe3a0c4d2acf13ed6f7f0f1fede0a2570f13b06e" },
   "apprentice": { "branch": "master", "commit": "2a4557410fe6b5e3906c5290d42c4e4d8813b0d8" },
@@ -12,9 +11,9 @@
   "dashboard-nvim": { "branch": "master", "commit": "f787e3462c2ee2b6117b17c1aa4ddf66cb6f57fe" },
   "dracula": { "branch": "main", "commit": "ae752c13e95fb7c5f58da4b5123cb804ea7568ee" },
   "everforest": { "branch": "master", "commit": "85a86eb62409e3ec88713bff3d1b9d7374e112e4" },
+  "everforest-nvim": { "branch": "main", "commit": "a0e9edc57379e8feafc6ba207c26dbb12fc1b6d8" },
   "flash.nvim": { "branch": "main", "commit": "b6346946d10d07998efee029fb0f7a593806d0cd" },
   "flexoki": { "branch": "main", "commit": "c3e2251e813d29d885a7cbbe9808a7af234d845d" },
-  "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "gitsigns.nvim": { "branch": "main", "commit": "31d6fb2d618bca1482b9f274751ead5f03461408" },
   "gruvbox": { "branch": "main", "commit": "154eb5ff5b96d0641307113fa385eaf0d36d9796" },
   "gruvbox-material": { "branch": "master", "commit": "11d779b26a9ab2b3db8c22c6ac9fb6e8ed4fea79" },
