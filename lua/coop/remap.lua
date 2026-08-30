@@ -218,11 +218,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
-    { name = "Red (Error)", group = "DiagnosticError" },
-    { name = "Blue (Info)", group = "DiagnosticInfo" },
-    { name = "Green (String)", group = "String" },
-    { name = "Teal (Hint)", group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
+    { name = "Red (Error)",              group = "DiagnosticError" },
+    { name = "Blue (Info)",              group = "DiagnosticInfo" },
+    { name = "Green (String)",           group = "String" },
+    { name = "Teal (Hint)",              group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -496,6 +496,7 @@ end
 
 -- Insert Semicolon at End of Line
 vim.keymap.set("n", "<leader>;", "A;<esc>", { desc = "Append semicolon at EOL" })
+vim.keymap.set("n", "bj", "A;<esc>", { desc = "Append semicolon at EOL" })
 vim.keymap.set("i", "<A-;>", "<c-o>A;", { desc = "Append semicolon at EOL" })
 
 -- Unicode Catalogue & Input Layer
@@ -668,9 +669,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs, "Special" },
-          { attr, "Comment" },
-          { desc, "Normal" },
+          { lhs,   "Special" },
+          { attr,  "Comment" },
+          { desc,  "Normal" },
         })
       end,
     }, {})

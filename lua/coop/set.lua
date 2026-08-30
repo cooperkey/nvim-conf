@@ -212,3 +212,24 @@ if vim.env.TMUX ~= nil then
     end,
   })
 end
+local number_toggle_group = vim.api.nvim_create_augroup("NumberToggle", { clear = true })
+
+-- Switch to absolute line numbers on entering Insert mode
+vim.api.nvim_create_autocmd("InsertEnter", {
+  group = number_toggle_group,
+  callback = function()
+    if vim.wo.number then
+      vim.wo.relativenumber = false
+    end
+  end,
+})
+
+-- Restore relative line numbers on leaving Insert mode
+vim.api.nvim_create_autocmd("InsertLeave", {
+  group = number_toggle_group,
+  callback = function()
+    if vim.wo.number then
+      vim.wo.relativenumber = true
+    end
+  end,
+})
