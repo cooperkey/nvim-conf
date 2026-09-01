@@ -139,14 +139,14 @@ vim.keymap.set(
   { desc = "Highlight word (Markdown)", nowait = true }
 )
 
-vim.keymap.set("v", "<leader>i", "<esc>`>a*<esc>`<i*<esc>", { desc = "Italic selection (Markdown)" })
-vim.keymap.set("n", "<leader>i", "viw<esc>`>a*<esc>`<i*<esc>", { desc = "Italic word (Markdown)" })
+vim.keymap.set("v", "<leader>i", "<esc>`>a_<esc>`<i_<esc>", { desc = "Italic selection (Markdown)" })
+vim.keymap.set("n", "<leader>i", "viw<esc>`>a_<esc>`<i_<esc>", { desc = "Italic word (Markdown)" })
 
 vim.keymap.set("v", "<leader>b", "<esc>`>a**<esc>`<i**<esc>", { desc = "Bold selection (Markdown)" })
 vim.keymap.set("n", "<leader>b", "viw<esc>`>a**<esc>`<i**<esc>", { desc = "Bold word (Markdown)" })
 
-vim.keymap.set("v", "<leader>bi", "<esc>`>a***<esc>`<i***<esc>", { desc = "Bold/Italic selection (Markdown)" })
-vim.keymap.set("n", "<leader>bi", "viw<esc>`>a***<esc>`<i***<esc>", { desc = "Bold/Italic word (Markdown)" })
+vim.keymap.set("v", "<leader>bi", "<esc>`>a**_<esc>`<i_**<esc>", { desc = "Bold/Italic selection (Markdown)" })
+vim.keymap.set("n", "<leader>bi", "viw<esc>`>a**_<esc>`<i_**<esc>", { desc = "Bold/Italic word (Markdown)" })
 
 vim.keymap.set("v", "<leader>c", "<esc>`>a`<esc>`<i`<esc>", { desc = "Inline code selection (Markdown)" })
 vim.keymap.set("n", "<leader>c", "viw<esc>`>a`<esc>`<i`<esc>", { desc = "Inline code word (Markdown)" })
@@ -496,7 +496,6 @@ end
 
 -- Insert Semicolon at End of Line
 vim.keymap.set("n", "<leader>;", "A;<esc>", { desc = "Append semicolon at EOL" })
-vim.keymap.set("n", "bj", "A;<esc>", { desc = "Append semicolon at EOL" })
 vim.keymap.set("i", "<A-;>", "<c-o>A;", { desc = "Append semicolon at EOL" })
 
 -- Unicode Catalogue & Input Layer
