@@ -1,5 +1,5 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
-vim.keymap.set("n", "<leader>so", [[:restart<CR>]], { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>so", [[:restart!<CR>]], { desc = "Restart nvim" })
 
 -- Auto-indent on empty/blank lines when entering insert mode
 vim.keymap.set("n", "i", function()
