@@ -1,3 +1,5 @@
+vim.env.XDG_RUNTIME_DIR = vim.env.TMPDIR or "/data/data/com.termux/files/usr/tmp"
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
