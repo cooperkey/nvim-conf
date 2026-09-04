@@ -1,4 +1,7 @@
-vim.env.XDG_RUNTIME_DIR = vim.env.TMPDIR or "/data/data/com.termux/files/usr/tmp"
+local is_termux = vim.env.PREFIX and vim.env.PREFIX:match("com%.termux") ~= nil
+if not vim.env.XDG_RUNTIME_DIR and is_termux then
+  vim.env.XDG_RUNTIME_DIR = vim.env.TMPDIR or "/data/data/com.termux/files/usr/tmp"
+end
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
