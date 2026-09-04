@@ -204,19 +204,31 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 if vim.env.TMUX ~= nil then
   local tmux_group = vim.api.nvim_create_augroup("TmuxStatusToggle", { clear = true })
-  vim.api.nvim_create_autocmd({ "VimEnter", "FocusGained" }, {
+  vim.api.nvim_create_autocmd({ "VimEnter", "VimResume" }, {
     group = tmux_group,
     callback = function()
       vim.system({ "tmux", "set", "status", "off" })
     end,
   })
-  vim.api.nvim_create_autocmd({ "VimLeave", "FocusLost" }, {
+  vim.api.nvim_create_autocmd({ "VimLeave", "VimSuspend" }, {
     group = tmux_group,
     callback = function()
       vim.system({ "tmux", "set", "status", "on" })
     end,
   })
 end
+
+vim.api.nvim_create_autocmd("SessionLoadPost", {
+  desc = "Reattach treesitter highlighting on session restore",
+  callback = function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
+        pcall(vim.treesitter.start, buf)
+      end
+    end
+  end,
+})
 local number_toggle_group = vim.api.nvim_create_augroup("NumberToggle", { clear = true })
 
 -- Switch to absolute line numbers on entering Insert mode
