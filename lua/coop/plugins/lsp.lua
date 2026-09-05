@@ -131,7 +131,7 @@ return {
             cmd = { "typescript-language-server", "--stdio" },
             filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
           },
-          jdtls = { cmd = { "jdtls" }, filetypes = { "java" } },
+          jdtls = {},
         }
 
         for server, config in pairs(servers) do
@@ -141,8 +141,9 @@ return {
         end
       end
     end,
-    {
-      "olimorris/codecompanion.nvim",
+  },
+  {
+    "olimorris/codecompanion.nvim",
       dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
@@ -165,5 +166,4 @@ return {
         { "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "Inline Actions" },
       },
     },
-  },
 }
