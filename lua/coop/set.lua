@@ -163,6 +163,54 @@ vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
   callback = _G.set_markdown_highlight,
 })
 
+-- ── Dynamic SignColumn & GitSigns Background Sync ───────────────────────────
+local function sync_signs_bg()
+  local function apply()
+    vim.api.nvim_set_hl(0, "SignColumn", { link = "Normal" })
+
+    local function clear_bg(group)
+      local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+      if hl.bg or hl.ctermbg then
+        hl.bg = nil
+        hl.ctermbg = nil
+        vim.api.nvim_set_hl(0, group, hl)
+      end
+    end
+
+    clear_bg("FoldColumn")
+    clear_bg("LineNr")
+
+    local sign_prefixes = {
+      "GitSignsAdd",
+      "GitSignsChange",
+      "GitSignsDelete",
+      "GitSignsChangedelete",
+      "GitSignsTopdelete",
+      "GitSignsUntracked",
+    }
+
+    for _, base in ipairs(sign_prefixes) do
+      clear_bg(base)
+      clear_bg(base .. "Nr")
+      clear_bg(base .. "Cul")
+      local staged = base:gsub("^GitSigns", "GitSignsStaged")
+      clear_bg(staged)
+      clear_bg(staged .. "Nr")
+      clear_bg(staged .. "Cul")
+    end
+  end
+
+  apply()
+  vim.schedule(apply)
+end
+
+local signs_bg_group = vim.api.nvim_create_augroup("DynamicSignsBg", { clear = true })
+vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+  group = signs_bg_group,
+  callback = sync_signs_bg,
+})
+
+
 -- ── File Save Notification ──────────────────────────────────────────────────
 vim.api.nvim_create_autocmd("BufWritePost", {
   desc = "Notify when saving a file",

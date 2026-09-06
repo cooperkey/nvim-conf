@@ -3,7 +3,17 @@ return {
   { "catppuccin/nvim", name = "catppuccin", lazy = true, priority = 1000 },
   { "sainnhe/everforest", name = "everforest", lazy = true, priority = 1000 },
   { "kepano/flexoki-neovim", name = "flexoki", lazy = true, priority = 1000 },
-  { "ellisonleao/gruvbox.nvim", name = "gruvbox", lazy = true, priority = 1000 },
+  {
+    "ellisonleao/gruvbox.nvim",
+    name = "gruvbox",
+    lazy = true,
+    priority = 1000,
+    opts = {
+      overrides = {
+        SignColumn = { link = "Normal" },
+      },
+    },
+  },
   { "sainnhe/gruvbox-material", name = "gruvbox-material", lazy = true, priority = 1000 },
   { "rebelot/kanagawa.nvim", name = "kanagawa", lazy = true, priority = 1000 },
   { "tahayvr/matteblack.nvim", name = "matteblack", lazy = true, priority = 1000 },
