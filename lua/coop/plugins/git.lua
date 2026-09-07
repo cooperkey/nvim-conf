@@ -5,6 +5,74 @@ local function ensure_ssh_agent()
   end
 end
 
+ensure_ssh_agent()
+
+local function add_ssh_key()
+  ensure_ssh_agent()
+  local sock = vim.env.SSH_AUTH_SOCK or vim.fn.expand("~/.ssh/ssh-agent.sock")
+  if not vim.uv.fs_stat(sock) then
+    vim.notify("SSH agent socket not found: " .. sock, vim.log.levels.ERROR)
+    return
+  end
+
+  local key_path = vim.fn.expand("~/.ssh/id_ed25519")
+  if not vim.uv.fs_stat(key_path) then
+    vim.notify("SSH private key not found: " .. key_path, vim.log.levels.ERROR)
+    return
+  end
+
+  local check = vim.system({ "ssh-add", "-l" }, { env = { SSH_AUTH_SOCK = sock }, text = true }):wait()
+  if check.code == 0 and check.stdout and check.stdout:find("id_ed25519") then
+    vim.notify("SSH key is already loaded in agent")
+    return
+  end
+
+  local pass = vim.fn.inputsecret("Enter passphrase for " .. key_path .. ": ")
+  if not pass or pass == "" then
+    vim.notify("SSHAdd: cancelled")
+    return
+  end
+
+  local askpass = vim.fn.stdpath("data") .. "/ssh_askpass.sh"
+  if not vim.uv.fs_stat(askpass) then
+    local f = io.open(askpass, "w")
+    if f then
+      f:write("#!/bin/sh\nif [ -f \"$SSH_PASS_FILE\" ]; then\n  cat \"$SSH_PASS_FILE\"\n  rm -f \"$SSH_PASS_FILE\"\nelse\n  exit 1\nfi\n")
+      f:close()
+      vim.uv.fs_chmod(askpass, 448)
+    end
+  end
+
+  local pass_file = vim.fn.tempname()
+  local pf = io.open(pass_file, "w")
+  if pf then
+    pf:write(pass .. "\n")
+    pf:close()
+    vim.uv.fs_chmod(pass_file, 384)
+  end
+
+  local res = vim.system({ "ssh-add", key_path }, {
+    env = {
+      SSH_AUTH_SOCK = sock,
+      SSH_ASKPASS = askpass,
+      SSH_ASKPASS_REQUIRE = "force",
+      DISPLAY = ":0",
+      SSH_PASS_FILE = pass_file,
+    },
+    stdin = false,
+  }):wait()
+
+  pcall(os.remove, pass_file)
+
+  if res.code == 0 then
+    vim.notify("Identity added: " .. key_path)
+  else
+    vim.notify("Failed to add SSH key: incorrect passphrase", vim.log.levels.ERROR)
+  end
+end
+
+vim.api.nvim_create_user_command("SSHAdd", add_ssh_key, { desc = "Add SSH key to agent using cmdline input" })
+
 return {
   {
     "tpope/vim-fugitive",
@@ -25,14 +93,7 @@ return {
       "GMove",
       "GDelete",
       "GBrowse",
-      "SSHAdd",
     },
-    init = function()
-      vim.api.nvim_create_user_command("SSHAdd", function()
-        ensure_ssh_agent()
-        vim.cmd("botright 10split | term ssh-add ~/.ssh/id_ed25519")
-      end, { desc = "Add SSH key to agent" })
-    end,
     keys = {
       {
         "<leader>gg",
