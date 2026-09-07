@@ -70,7 +70,6 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
-
 vim.opt.cmdheight = 0
 vim.opt.laststatus = 3
 
@@ -213,15 +212,14 @@ vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
   callback = sync_signs_bg,
 })
 
-
--- ── File Save Notification ──────────────────────────────────────────────────
-vim.api.nvim_create_autocmd("BufWritePost", {
-  desc = "Notify when saving a file",
-  callback = function(ev)
-    local filename = vim.fn.fnamemodify(ev.file, ":t")
-    vim.notify("Saved " .. filename, vim.log.levels.INFO, { title = "Buffer Saved" })
-  end,
-})
+-- -- ── File Save Notification ──────────────────────────────────────────────────
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--   desc = "Notify when saving a file",
+--   callback = function(ev)
+--     local filename = vim.fn.fnamemodify(ev.file, ":t")
+--     vim.notify("Saved " .. filename, vim.log.levels.INFO, { title = "Buffer Saved" })
+--   end,
+-- })
 
 -- ── Auto Filetype & Treesitter Detection ──────────────────────────────────
 vim.api.nvim_create_autocmd("BufWritePost", {

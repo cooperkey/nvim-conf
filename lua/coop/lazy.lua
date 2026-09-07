@@ -17,6 +17,10 @@ local custom_specs = (ok and type(custom.get_specs) == "function") and custom.ge
 require("lazy").setup({
   { import = "coop.plugins" },
   custom_specs,
+}, {
+  change_detection = {
+    notify = false,
+  },
 })
 
 if ok and type(custom.setup) == "function" then

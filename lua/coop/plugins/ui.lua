@@ -1,5 +1,4 @@
 local cached_tmux_windows = ""
-
 local function update_tmux_windows()
   if not vim.env.TMUX then
     return
@@ -46,6 +45,55 @@ if vim.env.TMUX then
     callback = update_tmux_windows,
   })
 end
+local lualine_notif = ""
+local notif_timer = nil
+
+local function show_lualine_notification(msg)
+  local str = type(msg) == "string" and msg or vim.inspect(msg)
+  lualine_notif = str:gsub("[\r\n]+", " "):gsub("%s+", " ")
+  if notif_timer then
+    notif_timer:stop()
+  else
+    notif_timer = vim.uv.new_timer()
+  end
+  notif_timer:start(
+    3000,
+    0,
+    vim.schedule_wrap(function()
+      lualine_notif = ""
+      pcall(function()
+        require("lualine").refresh({ place = { "statusline" } })
+      end)
+    end)
+  )
+  vim.schedule(function()
+    pcall(function()
+      require("lualine").refresh({ place = { "statusline" } })
+    end)
+  end)
+end
+
+vim.notify = function(msg)
+  show_lualine_notification(msg)
+end
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = vim.api.nvim_create_augroup("lualine_write_notify", { clear = true }),
+  desc = "Display written notification in lualine",
+  callback = function(ev)
+    if not vim.api.nvim_buf_is_valid(ev.buf) or ev.file == "" then
+      return
+    end
+    local filename = vim.fn.fnamemodify(ev.file, ":~:.")
+    if filename == "" then
+      filename = vim.fn.fnamemodify(ev.file, ":t")
+    end
+    local lines = vim.api.nvim_buf_line_count(ev.buf)
+    local stat = vim.uv.fs_stat(ev.file)
+    local bytes = stat and stat.size or vim.fn.getfsize(ev.file)
+    show_lualine_notification(string.format('"%s" %dL, %dB written', filename, lines, bytes))
+  end,
+})
 
 return {
   {
@@ -73,10 +121,18 @@ return {
         lualine_x = {
           {
             function()
+              return lualine_notif
+            end,
+            cond = function()
+              return lualine_notif ~= ""
+            end,
+          },
+          {
+            function()
               return cached_tmux_windows
             end,
             cond = function()
-              return vim.env.TMUX ~= nil and cached_tmux_windows ~= ""
+              return vim.env.TMUX ~= nil and cached_tmux_windows ~= "" and lualine_notif == ""
             end,
           },
         },
@@ -94,20 +150,14 @@ return {
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      {
-        "rcarriga/nvim-notify",
-        opts = {
-          top_down = false,
-          stages = "static",
-          timeout = 2000,
-          render = "compact",
-          max_width = 50,
-          max_height = 10,
-          fps = 60,
-        },
-      },
     },
     opts = {
+      notify = {
+        enabled = false,
+      },
+      messages = {
+        enabled = false,
+      },
       cmdline = {
         view = "cmdline",
       },
@@ -121,6 +171,24 @@ return {
           },
           size = {
             width = "30%",
+            height = "auto",
+          },
+          border = {
+            style = "none",
+          },
+          win_options = {
+            winhighlight = "NormalFloat:Normal,FloatBorder:Normal,FloatTitle:Normal,MsgArea:Normal",
+          },
+        },
+        confirm = {
+          backend = "popup",
+          relative = "editor",
+          position = {
+            row = -1,
+            col = 0,
+          },
+          size = {
+            width = "auto",
             height = "auto",
           },
           border = {
