@@ -4,12 +4,11 @@
 
 - Neovim >= 0.10
 - git
-- Node.js + npm
-- Python 3 + pip
-- Rust + cargo
-- PHP + Composer
+- Node.js + npm (Prettier, pyright, typescript-language-server, markdown-preview)
+- Python 3 + pip (isort, black)
+- Rust + cargo (blink.cmp build, rust-analyzer, rustfmt)
+- C/C++ compiler + tools (clangd, clang-format)
 - A [Nerd Font](https://www.nerdfonts.com/)
-
 
 ## Plugins
 
@@ -20,10 +19,10 @@
 | [lazy.nvim](https://github.com/folke/lazy.nvim) | Plugin manager |
 | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | LSP configuration |
 | [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/tool installer |
-| [blink.cmp](https://github.com/Saghen/blink.cmp) | Completion engine |
-| [LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Snippet engine |
-| [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | VSCode-style snippet presets |
+| [blink.cmp](https://github.com/Saghen/blink.cmp) | High-performance completion engine |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax parsing & highlighting |
+| [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter syntax-aware text objects |
+| [codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) | LLM chat, inline generation & actions |
 
 ### Navigation
 
@@ -38,38 +37,41 @@
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [conform.nvim](https://github.com/stevearc/conform.nvim) | Code formatting |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Code formatting engine |
 | [nvim-surround](https://github.com/kylechui/nvim-surround) | Surround text objects |
 | [mini.pairs](https://github.com/echasnovski/mini.pairs) | Auto-close brackets & quotes |
 | [mini.indentscope](https://github.com/echasnovski/mini.indentscope) | Indent scope guide line |
-| [vim-matchup](https://github.com/andymass/vim-matchup) | Matching bracket highlight & jump |
 | [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) | Auto-close HTML/JSX tags |
+| [undotree](https://github.com/mbbill/undotree) | Visual undo history visualizer |
 
 ### UI
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Statusline |
-| [noice.nvim](https://github.com/folke/noice.nvim) | Cmdline, LSP progress, notifications |
+| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Statusline with tmux window integration |
+| [noice.nvim](https://github.com/folke/noice.nvim) | Minimal cmdline, popups & messages |
 | [nvim-notify](https://github.com/rcarriga/nvim-notify) | Notification popups |
+| [dashboard-nvim](https://github.com/nvimdev/dashboard-nvim) | Fast startup dashboard |
+| [nvim-highlight-colors](https://github.com/brenoprata10/nvim-highlight-colors) | Color preview highlighter |
+| [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | File icons |
 
 ### Git
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [vim-fugitive](https://github.com/tpope/vim-fugitive) | Git commands in Neovim |
+| [vim-fugitive](https://github.com/tpope/vim-fugitive) | Comprehensive Git wrapper & status index |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git diff signs in gutter |
 
 ### Markdown
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | Inline Markdown rendering |
+| [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | Inline Markdown rendering & LaTeX |
 | [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) | Browser preview |
 
 ### Colorschemes (lazy-loaded)
 
-bamboo · catppuccin · everforest · flexoki · gruvbox · kanagawa · matteblack · monokai-pro · nord · rose-pine · tokyonight · solarized-osaka · omarchy-amberbyte · osaka-jade
+`acme` · `afterglow` · `apprentice` · `b2t` · `bamboo` · `base16` · `black-metal` (with `darkthrone`) · `catppuccin` · `dracula` · `everforest` · `flexoki` · `gruvbox` · `gruvbox-material` · `kanagawa` · `mars` · `matteblack` · `miasma` · `monokai-pro` · `nes` · `nightfox` · `osaka-jade` · `papercolor` · `rose-pine` · `snow` · `solarize` (`solarized-osaka`) · `tokyonight` · `zenburn`
 
 ## Language Servers
 
@@ -81,10 +83,10 @@ Configured via native `vim.lsp.config` (Neovim 0.10+ API):
 | `rust_analyzer` | Rust |
 | `clangd` | C / C++ |
 | `pyright` | Python |
-| `vscode-html-language-server` | HTML |
-| `vscode-css-language-server` | CSS / SCSS |
-| `vscode-json-language-server` | JSON |
-| `typescript-language-server` | JavaScript / TypeScript |
+| `html` (`vscode-html-language-server`) | HTML |
+| `cssls` (`vscode-css-language-server`) | CSS / SCSS |
+| `jsonls` (`vscode-json-language-server`) | JSON |
+| `ts_ls` (`typescript-language-server`) | JavaScript / TypeScript |
 | `jdtls` | Java |
 
 ## Formatters (conform.nvim)
@@ -97,62 +99,110 @@ Configured via native `vim.lsp.config` (Neovim 0.10+ API):
 | `rustfmt` | Rust |
 | `clang-format` | C / C++ |
 | `shfmt` | Bash / Zsh / Shell |
-| `trim_whitespace` | All (fallback) |
+| `trim_whitespace` | Fallback for all filetypes |
 
-All formatters enforce **2-space indentation**.
+Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-space indentation**).
 
 ## Keymaps
 
 `<leader>` is `Space`.
 
-### General
+### General & Editor
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | `<leader>e` | n | Open file explorer (oil.nvim) |
-| `<leader>E` | n | File explorer in float |
+| `<leader>E` | n | File explorer in floating window (oil.nvim) |
 | `-` | n | Open parent directory (oil.nvim) |
-| `<leader>l` | n | Open lazy.nvim |
+| `<leader>l` | n | Open lazy.nvim panel |
 | `<leader>z` | n | Colorscheme picker (Telescope) |
-| `<leader>n` | n | Notification history |
-| `<leader>rs` | n | Restart Neovim |
-| `<Esc>` | n/i/s | Clear search highlight |
+| `<leader>n` | n | Notification history (Noice / Telescope) |
+| `<leader>so` | n | Restart Neovim (`:restart!`) |
+| `<leader>rs` | n/v | Global find-and-replace word / visual selection |
+| `<leader>;` | n | Append semicolon at end of line |
+| `<A-;>` | i | Append semicolon at end of line |
+| `<Esc>` | n/i/s | Clear search highlight (`noh`) |
+| `<leader>up` | n | Toggle auto-pairs (`mini.pairs`) |
+| `<leader>u` | n | Toggle undo history tree (`undotree`) |
 
-### Window Management
-
-| Key | Mode | Action |
-| :--- | :---: | :--- |
-| `<C-h/j/k/l>` | n | Navigate windows |
-| `<C-Up/Down>` | n | Resize window height |
-| `<C-Left/Right>` | n | Resize window width |
-
-### Search & Navigation
+### Windows, Splits & Buffers
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader><leader>` | n | Find files (Telescope) |
-| `<C-p>` | n | Git files (Telescope) |
-| `<leader>/` | n | Grep string (Telescope) |
-| `<leader>k` | n | Keymap catalogue (Telescope, colored) |
-| `<leader>ck` | n | Search keymaps in config files |
+| `<C-h/j/k/l>` | n | Focus window left / down / up / right |
+| `<C-Up/Down>` | n | Resize window height (+/- 2) |
+| `<C-Left/Right>` | n | Resize window width (-/+ 2) |
+| `<M-v>` | n | Split window vertically (`:vsplit`) |
+| `<M-h>` | n | Split window horizontally (`:split`) |
+| `<M-q>` | n/t | Close current split window |
+| `<leader>,` | n | Alternate buffer / previous window (`<C-^>`) |
+| `<leader>bn` | n | Next buffer (`:bnext`) |
+| `<leader>bp` | n | Previous buffer (`:bprevious`) |
+| `<leader>bd` | n | Close current buffer (safe) |
+| `<leader>bo` | n | Close all other inactive buffers |
+
+### Quickfix
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| `<M-n>` | n | Next quickfix item (`:cnext`) |
+| `<M-p>` | n | Previous quickfix item (`:cprev`) |
+| `<M-o>p` | n | Open quickfix list (`:copen`) |
+| `<M-o>s` | n | Close quickfix list (`:cclose`) |
+
+### Movement & Clipboard
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| `J` / `K` | v | Move selected lines down / up |
+| `<` / `>` | v | Indent left / right and keep selection |
+| `J` | n | Join lines without moving cursor |
+| `<C-d>` / `<C-u>` | n | Half-page scroll down / up (centered) |
+| `<leader>y` | n/v | Yank to system clipboard (`"+y`) |
+| `<leader>Y` | n | Yank line to system clipboard (`"+Y`) |
+| `<leader>d` | n/v | Delete to system clipboard (`"+d`) |
+| `<leader>D` | n | Delete line to system clipboard (`"+dd`) |
+| `<leader>p` | x | Paste without overwriting default register |
+
+### Search & Navigation (Telescope & Flash)
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| `<leader><leader>` | n | Find files in context directory (Telescope) |
+| `<C-p>` | n | Git files in context directory (Telescope) |
+| `<leader>/` | n | Live grep in context directory (Telescope) |
+| `<leader>gw` | n | Grep word under cursor in context directory (Telescope) |
+| `<leader>k` | n | Keymap catalogue browser (Telescope, color-coded) |
+| `<leader>ck` | n | Grep keymaps inside nvim config files |
 | `s` | n/x/o | Flash jump |
-| `S` | n/o | Flash treesitter |
-| `r` | o | Remote flash |
-| `R` | o/x | Treesitter search |
+| `S` | n/o | Flash treesitter node |
+| `r` | o | Flash remote jump |
+| `R` | o/x | Flash treesitter search |
 
-### Harpoon
+### Treesitter Text Objects
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader>a` | n | Add file to harpoon |
-| `<C-e>` | n | Open harpoon menu |
-| `<M-a/r/s/t>` | n | Jump to harpoon slots 1-4 |
+| `af` / `if` | x/o | Around / inside function |
+| `ai` / `ii` | x/o | Around / inside conditional (`if` / `else`) |
+| `ac` / `ic` | x/o | Around / inside comment |
+
+### Harpoon (v2)
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| `<leader>a` | n | Add current file to harpoon |
+| `<C-e>` | n | Open harpoon quick menu |
+| `<M-a>` | n | Select harpoon slot 1 |
+| `<M-r>` | n | Select harpoon slot 2 |
+| `<M-s>` | n | Select harpoon slot 3 |
+| `<M-t>` | n | Select harpoon slot 4 |
 
 ### Git
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader>gg` / `<leader>gs` | n | Open fugitive git panel |
+| `<leader>gg` / `<leader>gs` | n | Open Fugitive git status panel |
 
 ### LSP (active on LspAttach)
 
@@ -166,67 +216,69 @@ All formatters enforce **2-space indentation**.
 | `gr` | n | Go to references |
 | `gs` | n | Signature help |
 | `<F2>` | n | Rename symbol |
-| `<F3>` | n/x | Format buffer (LSP) |
-| `<F4>` | n | Code action |
+| `<F4>` | n | Code actions |
 
-### Formatting
+### AI (CodeCompanion)
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader>cf` | n/v | Format file or range (conform) |
-| `<leader>tf` | n | Toggle format-on-save |
+| `<leader>ci` | n/v | CodeCompanion inline prompt |
+| `<leader>ca` | n/v | CodeCompanion inline actions menu |
+
+### Formatting (conform.nvim)
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| `<leader>cf` | n/v | Format file or visual selection (conform) |
+| `<leader>tf` | n | Toggle auto-format on save |
 
 ### Completion (blink.cmp)
 
 | Key | Action |
 | :--- | :--- |
-| `<Down>` / `<C-n>` | Next item |
-| `<Up>` / `<C-p>` | Previous item |
+| `<Down>` / `<C-n>` | Next completion candidate |
+| `<Up>` / `<C-p>` | Previous completion candidate |
 | `<Tab>` | Accept suggestion |
 
-### Clipboard
+### Markdown Workflow
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader>y` | n/v | Yank to system clipboard |
-| `<leader>Y` | n | Yank line to system clipboard |
-| `<leader>d` | n/v | Delete to system clipboard |
-| `<leader>p` | x | Paste without overwriting register |
-
-### Markdown
-
-| Key | Mode | Action |
-| :--- | :---: | :--- |
-| `<leader>mp` | n | Toggle Markdown Preview |
-| `<leader>h` | n/v | Highlight word/selection (`<mark>`) |
-| `<leader>b` | n/v | Bold |
-| `<leader>i` | n/v | Italic |
-| `<leader>bi` | n/v | Bold + Italic |
-| `<leader>c` | n/v | Inline code |
-| `<leader>s` | n/v | Strikethrough |
-| `<leader>ml` | n/v | Convert to link |
-| `<leader>q` | n | Blockquote |
+| `<leader>mp` | n | Toggle Markdown Preview in browser |
+| `<leader>mP` | n | Stop Markdown Preview server |
+| `<leader>x` | n/v | Toggle / create checklist item (`- [ ]` / `- [x]`) |
+| `<leader>h` | n/v | Highlight word / selection (`<mark>`) |
+| `<leader>mc` | n | Choose `<mark>` highlight accent color |
+| `<leader>b` | n/v | Bold (`**text**`) |
+| `<leader>i` | n/v | Italic (`_text_`) |
+| `<leader>bi` | n/v | Bold + Italic (`**_text_**`) |
+| `<leader>c` | n/v | Inline code (`` `text` ``) |
+| `<leader>s` | n/v | Strikethrough (`~~text~~`) |
+| `<leader>ml` | n/v | Convert word / selection to link (`[text]()`) |
+| `<leader>cb` | v | Wrap selection in fenced code block (```` ``` ````) |
+| `<leader>mr` | v | Strip markdown formatting from selection |
+| `<leader>1` - `<leader>6` | n | Set heading level 1 through 6 |
+| `gl` / `<leader>mg` | n | Follow link under cursor (URL, file, or `#anchor`) |
+| `]]` / `[[` | n | Jump to next / previous heading |
+| `<leader>mt` | n | Generate and insert markdown table |
+| `<leader>mw` | n | Display word, line, and character count |
 
 ### Unicode Input
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<C-q>` | n/i | Unicode hex input overlay (4-digit hex, backspace supported) |
+| `<C-q>` | n/i | Unicode hex input overlay (4-digit hex, live preview) |
 | `<leader>U` | n | Unicode character catalogue browser |
-
-### Undotree
-
-| Key | Mode | Action |
-| :--- | :---: | :--- |
-| `<leader>u` | n | Toggle undo tree |
 
 ## Editor Options
 
-- 2-space indentation, expandtab
-- Relative line numbers
+- 2-space indentation default, expandtab (Python enforces 4 spaces via PEP 8)
+- Relative line numbers (automatically toggles to absolute in Insert mode)
 - Persistent undo (`~/.local/state/nvim/undo`)
-- No swap/backup files
-- `wrap = true` with visual-line `j/k` navigation
-- line-break true
-- Live colorscheme watcher via `~/.cache/nvim-live-theme`
-- Markdown `<mark>` tag concealment with custom highlight group
+- No swap or backup files
+- Treesitter-based folding with fast manual folding during insert mode
+- `wrap = true` with `linebreak`, `breakindent`, and visual-line navigation (`j/k`)
+- Automatic theme hot-reloading via `~/.cache/nvim-live-theme` and `~/.config/custom/current/`
+- Markdown `<mark>` tag concealment with customizable highlight group
+- Tmux statusbar toggle (hides tmux status while nvim is active, restores on leave)
+- Buffer save notifications (`BufWritePost`)
