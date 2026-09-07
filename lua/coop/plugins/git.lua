@@ -1,32 +1,48 @@
 return {
   {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
+    "tpope/vim-fugitive",
     cmd = {
-      "LazyGit",
-      "LazyGitConfig",
-      "LazyGitCurrentFile",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
+      "G",
+      "Git",
+      "Gdiffsplit",
+      "Gvdiffsplit",
+      "Gedit",
+      "Gsplit",
+      "Gvsplit",
+      "Gread",
+      "Gwrite",
+      "Ggrep",
+      "Glgrep",
+      "Gclog",
+      "GlLog",
+      "GMove",
+      "GDelete",
+      "GBrowse",
     },
-    -- optional for floating window border decoration
-    -- dependencies = {
-    --   "nvim-lua/plenary.nvim",
-    -- },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
     keys = {
       {
         "<leader>gg",
         function()
           local dir = require("coop.util").get_context_dir()
-          if vim.fs.root(dir, ".git") then
-            require("lazygit").lazygit(dir)
-          else
-            require("lazygit").lazygit()
+          local root = vim.fs.root(dir, ".git")
+          if root and vim.fn.exists("*FugitiveDetect") == 1 then
+            vim.fn["FugitiveDetect"](root)
           end
+          vim.cmd.Git()
         end,
-        desc = "LazyGit",
+        desc = "Open fugitive git panel",
+      },
+      {
+        "<leader>gs",
+        function()
+          local dir = require("coop.util").get_context_dir()
+          local root = vim.fs.root(dir, ".git")
+          if root and vim.fn.exists("*FugitiveDetect") == 1 then
+            vim.fn["FugitiveDetect"](root)
+          end
+          vim.cmd.Git()
+        end,
+        desc = "Open fugitive git panel",
       },
     },
   },

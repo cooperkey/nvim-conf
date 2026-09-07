@@ -35,4 +35,5 @@ return {
   { "bjarneo/nes.nvim", name = "nes", lazy = true, priority = 1000 },
   { "bjarneo/snow.nvim", name = "snow", lazy = true, priority = 1000 },
   { "steve-lohmeyer/mars.nvim", name = "mars", lazy = true, priority = 1000 },
+  { "metalelf0/black-metal-theme-neovim", name = "black-metal", lazy = false, priority = 1000 },
 }

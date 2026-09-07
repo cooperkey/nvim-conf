@@ -30,9 +30,12 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking",
+  desc = "Highlight and position cursor at end of yanked text",
   callback = function()
     vim.highlight.on_yank()
+    if vim.v.event.operator == "y" then
+      pcall(vim.api.nvim_win_set_cursor, 0, vim.api.nvim_buf_get_mark(0, "]"))
+    end
   end,
 })
 

@@ -57,7 +57,7 @@
 
 | Plugin | Purpose |
 | :--- | :--- |
-| [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim) | Git commands in Neovim |
+| [vim-fugitive](https://github.com/tpope/vim-fugitive) | Git commands in Neovim |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git diff signs in gutter |
 
 ### Markdown
@@ -152,7 +152,7 @@ All formatters enforce **2-space indentation**.
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| `<leader>gs` | n | Open fugitive git panel |
+| `<leader>gg` / `<leader>gs` | n | Open fugitive git panel |
 
 ### LSP (active on LspAttach)
 
