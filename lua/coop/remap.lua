@@ -80,6 +80,8 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part dow
 
 vim.keymap.set("v", "<", "<gv", { desc = "indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "indent right and reselect" })
+vim.keymap.set("n", "<leader>;", "A;<esc>", { desc = "Append semicolon at EOL" })
+vim.keymap.set("i", "<A-;>", "<c-o>A;", { desc = "Append semicolon at EOL" })
 
 vim.keymap.set("n", "J", "mzJ`z", { desc = "move below to same line of cursor" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down halfw1y" })
@@ -493,11 +495,6 @@ for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     apply_md_keymaps(buf)
   end
 end
-
--- Insert Semicolon at End of Line
-vim.keymap.set("n", "<leader>;", "A;<esc>", { desc = "Append semicolon at EOL" })
-vim.keymap.set("i", "<A-;>", "<c-o>A;", { desc = "Append semicolon at EOL" })
-
 -- Unicode Catalogue & Input Layer
 vim.keymap.set("n", "<leader>U", function()
   local ok, cat = pcall(require, "coop.unicode_catalogue")

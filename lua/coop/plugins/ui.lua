@@ -45,41 +45,75 @@ if vim.env.TMUX then
     callback = update_tmux_windows,
   })
 end
-local lualine_notif = ""
-local notif_timer = nil
+local cmdline_notif_win = nil
+local cmdline_notif_buf = nil
+local cmdline_notif_timer = nil
 
-local function show_lualine_notification(msg)
-  local str = type(msg) == "string" and msg or vim.inspect(msg)
-  lualine_notif = str:gsub("[\r\n]+", " "):gsub("%s+", " ")
-  if notif_timer then
-    notif_timer:stop()
-  else
-    notif_timer = vim.uv.new_timer()
+local function close_cmdline_notification()
+  if cmdline_notif_timer then
+    cmdline_notif_timer:stop()
   end
-  notif_timer:start(
-    3000,
-    0,
-    vim.schedule_wrap(function()
-      lualine_notif = ""
-      pcall(function()
-        require("lualine").refresh({ place = { "statusline" } })
-      end)
-    end)
-  )
-  vim.schedule(function()
-    pcall(function()
-      require("lualine").refresh({ place = { "statusline" } })
-    end)
-  end)
+  if cmdline_notif_win and vim.api.nvim_win_is_valid(cmdline_notif_win) then
+    vim.api.nvim_win_close(cmdline_notif_win, true)
+    cmdline_notif_win = nil
+  end
 end
 
+local function show_cmdline_notification(msg)
+  close_cmdline_notification()
+
+  local str = type(msg) == "string" and msg or vim.inspect(msg)
+  str = str:gsub("[\r\n]+", " "):gsub("%s+", " ")
+  if str == "" then
+    return
+  end
+
+  if not cmdline_notif_buf or not vim.api.nvim_buf_is_valid(cmdline_notif_buf) then
+    cmdline_notif_buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[cmdline_notif_buf].bufhidden = "wipe"
+  end
+
+  vim.api.nvim_buf_set_lines(cmdline_notif_buf, 0, -1, false, { str })
+
+  local width = math.max(#str, 1)
+  local row = math.max(vim.o.lines - 2, 0)
+
+  cmdline_notif_win = vim.api.nvim_open_win(cmdline_notif_buf, false, {
+    relative = "editor",
+    row = row,
+    col = 0,
+    width = width,
+    height = 1,
+    style = "minimal",
+    border = "none",
+    focusable = false,
+    noautocmd = true,
+  })
+
+  vim.wo[cmdline_notif_win].winhighlight = "Normal:Normal,NormalFloat:Normal"
+
+  cmdline_notif_timer = vim.uv.new_timer()
+  cmdline_notif_timer:start(
+    2500,
+    0,
+    vim.schedule_wrap(function()
+      close_cmdline_notification()
+    end)
+  )
+end
+
+vim.api.nvim_create_autocmd({ "CmdlineEnter", "InsertEnter" }, {
+  desc = "Dismiss cmdline notification on user input",
+  callback = close_cmdline_notification,
+})
+
 vim.notify = function(msg)
-  show_lualine_notification(msg)
+  show_cmdline_notification(msg)
 end
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  group = vim.api.nvim_create_augroup("lualine_write_notify", { clear = true }),
-  desc = "Display written notification in lualine",
+  group = vim.api.nvim_create_augroup("cmdline_write_notify", { clear = true }),
+  desc = "Display written notification on cmdline row",
   callback = function(ev)
     if not vim.api.nvim_buf_is_valid(ev.buf) or ev.file == "" then
       return
@@ -91,7 +125,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     local lines = vim.api.nvim_buf_line_count(ev.buf)
     local stat = vim.uv.fs_stat(ev.file)
     local bytes = stat and stat.size or vim.fn.getfsize(ev.file)
-    show_lualine_notification(string.format('"%s" %dL, %dB written', filename, lines, bytes))
+    vim.schedule(function()
+      show_cmdline_notification(string.format('"%s" %dL, %dB written', filename, lines, bytes))
+    end)
   end,
 })
 
@@ -121,18 +157,10 @@ return {
         lualine_x = {
           {
             function()
-              return lualine_notif
-            end,
-            cond = function()
-              return lualine_notif ~= ""
-            end,
-          },
-          {
-            function()
               return cached_tmux_windows
             end,
             cond = function()
-              return vim.env.TMUX ~= nil and cached_tmux_windows ~= "" and lualine_notif == ""
+              return vim.env.TMUX ~= nil and cached_tmux_windows ~= ""
             end,
           },
         },
@@ -156,7 +184,19 @@ return {
         enabled = false,
       },
       messages = {
-        enabled = false,
+        enabled = true,
+        view = "mini",
+        view_error = "mini",
+        view_warn = "mini",
+      },
+      routes = {
+        {
+          filter = {
+            event = "msg_show",
+            find = "written",
+          },
+          opts = { skip = true },
+        },
       },
       cmdline = {
         view = "cmdline",
@@ -196,6 +236,22 @@ return {
           },
           win_options = {
             winhighlight = "NormalFloat:Normal,FloatBorder:Normal,FloatTitle:Normal,MsgArea:Normal",
+          },
+        },
+        mini = {
+          backend = "mini",
+          relative = "editor",
+          align = "message-left",
+          timeout = 2500,
+          position = {
+            row = -1,
+            col = 0,
+          },
+          border = {
+            style = "none",
+          },
+          win_options = {
+            winhighlight = "NormalFloat:Normal",
           },
         },
       },
