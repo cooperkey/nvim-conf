@@ -153,8 +153,6 @@ All formatters enforce **2-space indentation**.
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | `<leader>gg` / `<leader>gs` | n | Open fugitive git panel |
-| `<leader>gp` | n | Git push (interactive prompt window) |
-| `gp` / `gP` | n (fugitive) | Git push / pull (interactive prompt window) |
 
 ### LSP (active on LspAttach)
 
