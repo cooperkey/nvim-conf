@@ -46,10 +46,6 @@ vim.keymap.set({ "x", "o" }, "ic", function()
   require("nvim-treesitter-textobjects.select").select_textobject("@comment.inner", "textobjects")
 end)
 
--- git
-vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push", remap = true })
-vim.keymap.set("n", "<leader>gp", "<cmd>Git pull<cr>", { desc = "Git pull", remap = true })
-
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
   vim.cmd("noh")
