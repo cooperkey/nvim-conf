@@ -59,7 +59,29 @@ local function close_cmdline_notification()
   end
 end
 
-local function show_cmdline_notification(msg)
+local function add_to_noice_history(str, level)
+  local ok_msg, Message = pcall(require, "noice.message")
+  local ok_mgr, Manager = pcall(require, "noice.message.manager")
+  if ok_msg and ok_mgr then
+    local lvl_map = {
+      [vim.log.levels.ERROR] = "error",
+      [vim.log.levels.WARN] = "warn",
+      [vim.log.levels.INFO] = "info",
+      [vim.log.levels.DEBUG] = "debug",
+      [vim.log.levels.TRACE] = "trace",
+    }
+    local kind = type(level) == "number" and (lvl_map[level] or "info") or (level or "info")
+    local m = Message("notify", kind, str)
+    if kind == "error" then
+      m.level = "error"
+    elseif kind == "warn" then
+      m.level = "warn"
+    end
+    Manager._history[m.id] = m
+  end
+end
+
+local function show_cmdline_notification(msg, level)
   close_cmdline_notification()
 
   local str = type(msg) == "string" and msg or vim.inspect(msg)
@@ -67,6 +89,8 @@ local function show_cmdline_notification(msg)
   if str == "" then
     return
   end
+
+  add_to_noice_history(str, level)
 
   if not cmdline_notif_buf or not vim.api.nvim_buf_is_valid(cmdline_notif_buf) then
     cmdline_notif_buf = vim.api.nvim_create_buf(false, true)
@@ -107,8 +131,8 @@ vim.api.nvim_create_autocmd({ "CmdlineEnter", "InsertEnter" }, {
   callback = close_cmdline_notification,
 })
 
-vim.notify = function(msg)
-  show_cmdline_notification(msg)
+vim.notify = function(msg, level)
+  show_cmdline_notification(msg, level)
 end
 
 vim.api.nvim_create_autocmd("BufWritePost", {

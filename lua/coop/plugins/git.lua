@@ -1,7 +1,11 @@
 local function ensure_ssh_agent()
   local sock = vim.fn.expand("~/.ssh/ssh-agent.sock")
-  if vim.uv.fs_stat(sock) then
-    vim.env.SSH_AUTH_SOCK = sock
+  vim.env.SSH_AUTH_SOCK = sock
+
+  local check = vim.system({ "ssh-add", "-l" }, { env = { SSH_AUTH_SOCK = sock } }):wait()
+  if check.code == 2 then
+    pcall(os.remove, sock)
+    vim.system({ "ssh-agent", "-a", sock }, { stdin = false }):wait()
   end
 end
 
@@ -9,11 +13,7 @@ ensure_ssh_agent()
 
 local function add_ssh_key()
   ensure_ssh_agent()
-  local sock = vim.env.SSH_AUTH_SOCK or vim.fn.expand("~/.ssh/ssh-agent.sock")
-  if not vim.uv.fs_stat(sock) then
-    vim.notify("SSH agent socket not found: " .. sock, vim.log.levels.ERROR)
-    return
-  end
+  local sock = vim.env.SSH_AUTH_SOCK
 
   local key_path = vim.fn.expand("~/.ssh/id_ed25519")
   if not vim.uv.fs_stat(key_path) then
