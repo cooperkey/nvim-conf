@@ -2,6 +2,7 @@ local is_termux = vim.env.PREFIX and vim.env.PREFIX:match("com%.termux") ~= nil
 if not vim.env.XDG_RUNTIME_DIR and is_termux then
   vim.env.XDG_RUNTIME_DIR = vim.env.TMPDIR or "/data/data/com.termux/files/usr/tmp"
 end
+vim.opt.statusline = "%f %m %= %{%v:lua.vim.lsp.status()%} %l:%c"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -40,7 +41,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Folding
-vim.opt.foldmethod = "expr"
+vim.opt.foldmethod = "manual"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99

@@ -103,7 +103,7 @@ return {
         symbol = "│",
         options = { try_as_border = true },
         draw = {
-          delay = 20,
+          delay = 150,
           animation = indentscope.gen_animation.none(),
         },
       }

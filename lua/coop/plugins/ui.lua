@@ -21,7 +21,7 @@ local function update_tmux_windows()
             tag = tag .. " 󰍉"
           end
           if is_active then
-            table.insert(items, "[" .. tag .. "]")
+            table.insert(items, tag .. "*")
           else
             table.insert(items, tag)
           end
@@ -157,6 +157,14 @@ return {
         lualine_x = {
           {
             function()
+              return vim.lsp.status()
+            end,
+            "encoding",
+            "fileformat",
+            "filetype",
+          },
+          {
+            function()
               return cached_tmux_windows
             end,
             cond = function()
@@ -180,6 +188,11 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = {
+      lsp = {
+        progress = {
+          enabled = false,
+        }
+      },
       notify = {
         enabled = false,
       },
@@ -262,7 +275,11 @@ return {
   },
   {
     "brenoprata10/nvim-highlight-colors",
-    opts = {},
+    opts = {
+      render = "background",
+      enable_named_colors = false,
+      enable_tailwind = false,
+    },
   },
   {
     "nvimdev/dashboard-nvim",
