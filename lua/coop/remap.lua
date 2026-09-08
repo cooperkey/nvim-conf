@@ -220,11 +220,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
-    { name = "Red (Error)", group = "DiagnosticError" },
-    { name = "Blue (Info)", group = "DiagnosticInfo" },
-    { name = "Green (String)", group = "String" },
-    { name = "Teal (Hint)", group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
+    { name = "Red (Error)",              group = "DiagnosticError" },
+    { name = "Blue (Info)",              group = "DiagnosticInfo" },
+    { name = "Green (String)",           group = "String" },
+    { name = "Teal (Hint)",              group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -665,9 +665,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs, "Special" },
-          { attr, "Comment" },
-          { desc, "Normal" },
+          { lhs,   "Special" },
+          { attr,  "Comment" },
+          { desc,  "Normal" },
         })
       end,
     }, {})
@@ -692,7 +692,7 @@ vim.keymap.set("n", "<leader>ck", function()
   end
 end, { desc = "Search keymaps in config files" })
 
--- Close current buffer
+-- close current
 vim.keymap.set("n", "<leader>bd", function()
   local buf = vim.api.nvim_get_current_buf()
   if vim.bo[buf].modified then
@@ -703,7 +703,7 @@ vim.keymap.set("n", "<leader>bd", function()
   pcall(vim.api.nvim_buf_delete, buf, { force = false })
 end, { desc = "Close current buffer" })
 
--- Close all other buffers except current
+--close all except current
 vim.keymap.set("n", "<leader>bo", function()
   local current = vim.api.nvim_get_current_buf()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -715,3 +715,6 @@ vim.keymap.set("n", "<leader>bo", function()
   end
   vim.notify("Cleaned inactive buffers", vim.log.levels.INFO)
 end, { desc = "Close other buffers" })
+-- fugitive for merge conflicts
+vim.keymap.set("n", "gu", "<cmd>diffget //2<cr>", { desc = "accept local files for merge" })
+vim.keymap.set("n", "gh", "<cmd>diffget //3<cr>", { desc = "accept remote files for merge" })

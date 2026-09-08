@@ -22,6 +22,7 @@
 | [blink.cmp](https://github.com/Saghen/blink.cmp) | High-performance completion engine |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax parsing & highlighting |
 | [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter syntax-aware text objects |
+| [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) | Sticky code context at top of window |
 | [codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) | LLM chat, inline generation & actions |
 
 ### Navigation
@@ -179,13 +180,15 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | `r` | o | Flash remote jump |
 | `R` | o/x | Flash treesitter search |
 
-### Treesitter Text Objects
+### Treesitter & Context
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | `af` / `if` | x/o | Around / inside function |
 | `ai` / `ii` | x/o | Around / inside conditional (`if` / `else`) |
 | `ac` / `ic` | x/o | Around / inside comment |
+| `[c` | n | Jump up to context header |
+| `<leader>tc` | n | Toggle Treesitter context |
 
 ### Harpoon (v2)
 
