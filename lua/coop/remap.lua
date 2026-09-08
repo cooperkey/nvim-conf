@@ -47,8 +47,8 @@ vim.keymap.set({ "x", "o" }, "ic", function()
 end)
 
 -- git
-vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
-vim.keymap.set("n", "<leader>gp", "<cmd>Git pull<cr>", { desc = "Git pull" })
+vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push", remap = true })
+vim.keymap.set("n", "<leader>gp", "<cmd>Git pull<cr>", { desc = "Git pull", remap = true })
 
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
@@ -224,11 +224,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
-    { name = "Red (Error)",              group = "DiagnosticError" },
-    { name = "Blue (Info)",              group = "DiagnosticInfo" },
-    { name = "Green (String)",           group = "String" },
-    { name = "Teal (Hint)",              group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
+    { name = "Red (Error)", group = "DiagnosticError" },
+    { name = "Blue (Info)", group = "DiagnosticInfo" },
+    { name = "Green (String)", group = "String" },
+    { name = "Teal (Hint)", group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -669,9 +669,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs,   "Special" },
-          { attr,  "Comment" },
-          { desc,  "Normal" },
+          { lhs, "Special" },
+          { attr, "Comment" },
+          { desc, "Normal" },
         })
       end,
     }, {})
