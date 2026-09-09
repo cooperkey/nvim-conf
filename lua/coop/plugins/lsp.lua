@@ -85,6 +85,12 @@ return {
           capabilities = capabilities,
           settings = {
             Lua = {
+              telemetry = { enable = false },
+              workspace = {
+                checkThirdParty = false,
+                maxPreload = 500,
+                preloadFileSize = 500,
+              },
               diagnostics = {
                 globals = { "vim" },
               },
@@ -102,13 +108,32 @@ return {
             ["rust-analyzer"] = {
               cargo = { allFeatures = true },
               procMacro = { enable = true },
+              lru = { capacity = 64 },
+              files = { watcher = "client" },
+              check = {
+                command = "check",
+                extraArgs = { "--quiet" },
+              },
+              diagnostics = {
+                enable = true,
+                experimental = { enable = false },
+              },
             },
           },
         })
         vim.lsp.enable("rust_analyzer")
 
         local servers = {
-          clangd = { cmd = { "clangd" }, filetypes = { "c", "cpp", "objc", "objcpp" } },
+          clangd = {
+            cmd = {
+              "clangd",
+              "-j=2",
+              "--background-index",
+              "--completion-style=bundled",
+              "--header-insertion=iwyu",
+            },
+            filetypes = { "c", "cpp", "objc", "objcpp" },
+          },
           pyright = {
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },

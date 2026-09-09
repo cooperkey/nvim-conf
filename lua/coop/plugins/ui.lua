@@ -297,14 +297,14 @@ return {
       },
     },
   },
-  {
-    "brenoprata10/nvim-highlight-colors",
-    opts = {
-      render = "background",
-      enable_named_colors = false,
-      enable_tailwind = false,
-    },
-  },
+  -- {
+  --   "brenoprata10/nvim-highlight-colors",
+  --   opts = {
+  --     render = "background",
+  --     enable_named_colors = false,
+  --     enable_tailwind = false,
+  --   },
+  -- },
   {
     "nvimdev/dashboard-nvim",
     event = "VimEnter",
