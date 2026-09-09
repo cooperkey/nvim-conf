@@ -274,6 +274,16 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | `<C-q>` | n/i | Unicode hex input overlay (4-digit hex, live preview) |
 | `<leader>U` | n | Unicode character catalogue browser |
 
+### Resource Management & Process Control
+
+| Key / Command | Mode | Action |
+| :--- | :---: | :--- |
+| `<leader>ts` / `<leader>ls` | n | Toggle LSP and background job suspension |
+| `:LspStatus` | cmd | Display resource dashboard (PID, RSS memory, timers) |
+| `:LspSuspend` | cmd | Explicitly stop active LSPs & freeze terminal jobs (if enabled) |
+| `:LspResume` | cmd | Reattach LSP across all open split buffers & unfreeze jobs |
+| `:LspToggle` | cmd | Toggle suspend/resume state |
+
 ## Editor Options
 
 - 2-space indentation default, expandtab (Python enforces 4 spaces via PEP 8)
@@ -286,3 +296,41 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 - Markdown `<mark>` tag concealment with customizable highlight group
 - Tmux statusbar toggle (hides tmux status while nvim is active, restores on leave)
 - Buffer save notifications (`BufWritePost`)
+
+## Cross-Platform Architecture & Agentic Coding Directives (Termux vs Desktop Linux)
+
+This Neovim configuration is shared via Git across both **Android (Termux)** and **Desktop Linux (Hyprland / Wayland / Foot)**.
+
+Any automated agent or developer modifying this configuration **must** adhere to the following architectural invariants:
+
+### 1. Platform Detection Standard
+Always detect platform differences using strict boolean expressions:
+```lua
+local is_android = (vim.fn.has("android") == 1)
+  or (vim.env.PREFIX ~= nil and vim.env.PREFIX:find("com%.termux") ~= nil)
+```
+*Never* rely on Lua truthiness hacks like `A and B or C` when `B` might be `nil` or `false`.
+
+### 2. Environment Divergence & Tuning Invariants
+
+| Parameter / Behavior | Termux (Android Mobile) | Desktop Linux (Workstation) | Rationale |
+| :--- | :--- | :--- | :--- |
+| `suspend_compilers` | `true` | `false` | On desktop, freezing terminal buffers stops active background builds (`cargo build`), test runners, dev servers (`vite`), and drops SSH connections. On Termux, stopping CPU jobs prevents battery drain and OS-level task killing. |
+| `focus_lost_timeout` | `180000` (3 minutes) | `1800000` (30 minutes) | Desktop tiling window managers (Hyprland) switch focus constantly. Killing LSPs after 3 minutes causes severe cold-start latency (`rust-analyzer`, `clangd` re-indexing). |
+| `idle_timeout` | `480000` (8 minutes) | `3600000` (60 minutes) | Workstations have abundant RAM; mobile devices suffer from Android LowMemoryKiller (LMKD). |
+| `orphan_debounce` | `15000` (15 seconds) | `60000` (60 seconds) | Closing a buffer to switch files should not immediately kill language servers on high-memory desktop environments. |
+
+### 3. Process Signaling & Procfs Rules
+- **Process Group Fallback**: When issuing signals via `vim.uv.kill(pid, sig)`, always signal the process group (`-pid`) first, but *must* provide an immediate fallback to `pid` if group signaling fails.
+- **VimLeavePre Cleanup**: No process must ever be left in `SIGSTOP` (`T` state) on Neovim exit. All suspended jobs must be cleanly signaled with `SIGCONT`.
+- **Procfs Direct Access**: On Linux, read `/proc/<pid>/task/<pid>/children` directly for instantaneous child PID lookups. Fall back to `pgrep -P` only on Android/Termux where task children nodes may be restricted by the vendor kernel. Never run synchronous subshells (`io.popen`) in hot paths or event loops.
+
+### 4. LSP & Buffer Handling
+- **Multi-Split Awareness**: When resuming LSPs, iterate over all valid windows (`vim.api.nvim_list_wins()`) and attach across visible buffers. Never assume `vim.api.nvim_get_current_buf()` is the only displayed buffer.
+- **Orphan Client Filtering**: A buffer attached to an LSP is valid if it is loaded AND either `buflisted` OR currently displayed in any window (`vim.fn.bufwinid(bufnr) ~= -1`). Do not terminate LSPs serving unlisted diff, fugitive, or preview buffers.
+- **API Modernization**: Use Neovim 0.12+ public APIs (e.g. `vim.lsp.get_configs({ enabled = true, filetype = ft })`) while retaining backward-compatible fallbacks for Neovim 0.10/0.11. Never bind directly to private tables (e.g. `vim.lsp.config._configs`) without public fallbacks.
+
+### 5. Pathing & Binaries
+- Do not assume absolute paths (`/usr/bin` vs `/data/data/com.termux/files/usr/bin`).
+- Always check binary presence via `vim.fn.executable(...) == 1` before invoking external CLI tools or daemons.
+

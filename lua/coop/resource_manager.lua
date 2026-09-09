@@ -1,12 +1,17 @@
 local M = {}
 
+local is_android = (vim.fn.has("android") == 1)
+  or (vim.env.PREFIX ~= nil and vim.env.PREFIX:find("com%.termux") ~= nil)
+
+M.is_android = is_android
+
 M.config = {
-  focus_lost_timeout = 180000, -- 3 minutes (ms)
-  idle_timeout = 480000,       -- 8 minutes (ms)
-  orphan_debounce = 15000,     -- 15 seconds (ms)
-  suspend_compilers = true,    -- Freeze terminal / compiler jobs via SIGSTOP/SIGCONT
-  stop_preview = true,         -- Stop background markdown-preview HTTP server
-  notify = true,               -- Notify on state transitions
+  focus_lost_timeout = is_android and 180000 or 1800000, -- 3 min on Termux/Android, 30 min on Desktop (ms)
+  idle_timeout = is_android and 480000 or 3600000,       -- 8 min on Termux/Android, 60 min on Desktop (ms)
+  orphan_debounce = is_android and 15000 or 60000,      -- 15s on Termux/Android, 60s on Desktop (ms)
+  suspend_compilers = is_android,                       -- Freeze terminal jobs only on Termux/Android
+  stop_preview = true,                                  -- Stop background markdown-preview HTTP server
+  notify = true,                                        -- Notify on state transitions
 }
 
 local state = {
@@ -48,6 +53,24 @@ end
 local function get_child_pids()
   local my_pid = vim.fn.getpid()
   local pids = {}
+
+  -- Fast path on Linux: read procfs children node directly without subshell
+  local cf = io.open("/proc/" .. my_pid .. "/task/" .. my_pid .. "/children", "r")
+  if cf then
+    local content = cf:read("*a")
+    cf:close()
+    if content and content ~= "" then
+      for pid_str in content:gmatch("%S+") do
+        local pid = tonumber(pid_str)
+        if pid then
+          table.insert(pids, pid)
+        end
+      end
+      return pids
+    end
+  end
+
+  -- Fallback for Android/Termux or environments without task children node
   local p = io.popen("pgrep -P " .. my_pid .. " 2>/dev/null")
   if p then
     for line in p:lines() do
@@ -73,7 +96,7 @@ local function find_client_pid(client, child_pids)
     if cf then
       local raw = cf:read("*a") or ""
       cf:close()
-      if raw:find(base_bin, 1, true) then
+      if raw:find(base_bin, 1, true) or (client.name and raw:find(client.name, 1, true)) then
         return cpid
       end
     end
@@ -88,16 +111,23 @@ local function has_enabled_lsp_for_ft(filetype)
   if not filetype or filetype == "" then
     return false
   end
-  if not (vim.lsp and vim.lsp.config and vim.lsp.config._configs) then
-    return false
+  -- Neovim 0.12+ public API
+  if vim.lsp.get_configs then
+    local configs = vim.lsp.get_configs({ enabled = true, filetype = filetype })
+    if configs and #configs > 0 then
+      return true
+    end
   end
-  for name, cfg in pairs(vim.lsp.config._configs) do
-    if vim.lsp.is_enabled(name) then
-      local fts = cfg.filetypes or (cfg.config and cfg.config.filetypes)
-      if fts then
-        for _, ft in ipairs(fts) do
-          if ft == filetype then
-            return true
+  -- Fallback for Neovim 0.10/0.11 or internal table
+  if vim.lsp and vim.lsp.config and vim.lsp.config._configs then
+    for name, cfg in pairs(vim.lsp.config._configs) do
+      if vim.lsp.is_enabled and vim.lsp.is_enabled(name) then
+        local fts = cfg.filetypes or (cfg.config and cfg.config.filetypes)
+        if fts then
+          for _, ft in ipairs(fts) do
+            if ft == filetype then
+              return true
+            end
           end
         end
       end
@@ -118,14 +148,16 @@ function M.get_active_lsp_clients()
   return active
 end
 
----Get list of valid, loaded, buflisted buffer numbers attached to an LSP client.
+---Get list of valid, loaded, buflisted or visible buffer numbers attached to an LSP client.
 ---@param client table
 ---@return number[]
 function M.get_valid_attached_buffers(client)
   local bufs = {}
   for bufnr, _ in pairs(client.attached_buffers or {}) do
-    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].buflisted then
-      table.insert(bufs, bufnr)
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+      if vim.bo[bufnr].buflisted or vim.fn.bufwinid(bufnr) ~= -1 then
+        table.insert(bufs, bufnr)
+      end
     end
   end
   return bufs
@@ -287,9 +319,17 @@ function M.resume(reason)
   state.is_suspended = false
   state.suspended_reason = nil
 
-  -- Re-attach LSP for the currently active buffer
-  local cur_buf = vim.api.nvim_get_current_buf()
-  M.resume_buffer(cur_buf)
+  -- Re-attach LSP for all currently visible buffers across open windows
+  local seen = {}
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(win) then
+      local buf = vim.api.nvim_win_get_buf(win)
+      if not seen[buf] then
+        seen[buf] = true
+        M.resume_buffer(buf)
+      end
+    end
+  end
 
   -- Reset idle timer
   state.last_active_time = vim.uv.now()
@@ -297,7 +337,7 @@ function M.resume(reason)
 
   if M.config.notify and (reason == "manual" or was_suspended) then
     vim.notify(
-      string.format("[Resource Manager] Resumed: active buffer LSP reattached, %d job(s) unfrozen", resumed_jobs_count),
+      string.format("[Resource Manager] Resumed: visible buffers reattached, %d job(s) unfrozen", resumed_jobs_count),
       vim.log.levels.INFO
     )
   end
@@ -330,7 +370,9 @@ end
 ---Display floating window with complete resource manager status.
 function M.show_status()
   local lines = {}
+  local env_str = is_android and "Termux (Android)" or "Desktop (Linux)"
   table.insert(lines, "Antigravity Resource Manager")
+  table.insert(lines, string.format("Environment: %s", env_str))
   table.insert(lines, string.rep("─", 50))
 
   -- Overall State
@@ -533,7 +575,10 @@ function M.setup(user_opts)
     group = group,
     callback = function()
       for pid, _ in pairs(state.suspended_jobs) do
-        pcall(vim.uv.kill, -pid, "sigcont")
+        local ok = pcall(vim.uv.kill, -pid, "sigcont")
+        if not ok or ok ~= 0 then
+          pcall(vim.uv.kill, pid, "sigcont")
+        end
       end
       for _, c in ipairs(M.get_active_lsp_clients()) do
         pcall(function()
