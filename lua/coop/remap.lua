@@ -1,5 +1,6 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>so", [[:restart!<CR>]], { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>db", [[:Dashboard<CR>]], { desc = "Restart nvim" })
 
 -- Auto-indent on empty/blank lines when entering insert mode
 vim.keymap.set("n", "i", function()
@@ -220,11 +221,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
-    { name = "Red (Error)",              group = "DiagnosticError" },
-    { name = "Blue (Info)",              group = "DiagnosticInfo" },
-    { name = "Green (String)",           group = "String" },
-    { name = "Teal (Hint)",              group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
+    { name = "Red (Error)", group = "DiagnosticError" },
+    { name = "Blue (Info)", group = "DiagnosticInfo" },
+    { name = "Green (String)", group = "String" },
+    { name = "Teal (Hint)", group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -665,9 +666,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs,   "Special" },
-          { attr,  "Comment" },
-          { desc,  "Normal" },
+          { lhs, "Special" },
+          { attr, "Comment" },
+          { desc, "Normal" },
         })
       end,
     }, {})
