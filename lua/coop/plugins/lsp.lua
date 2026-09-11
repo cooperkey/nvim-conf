@@ -41,7 +41,7 @@ return {
             fallbacks = {},
           },
           buffer = {
-            min_keyword_length = 1,
+            min_keyword_length = 3,
           },
         },
       },
@@ -169,26 +169,26 @@ return {
   },
   {
     "olimorris/codecompanion.nvim",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
-      },
-      opts = {
-        strategies = {
-          inline = {
-            adapter = "copilot", -- change to "copilot" if using ~/.config/github-copilot/hosts.json
-          },
-        },
-        display = {
-          diff = {
-            enabled = true,
-            provider = "default",
-          },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      strategies = {
+        inline = {
+          adapter = "copilot",   -- change to "copilot" if using ~/.config/github-copilot/hosts.json
         },
       },
-      keys = {
-        { "<leader>ci", ":CodeCompanion ", mode = { "n", "v" }, desc = "Inline Prompt" },
-        { "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "Inline Actions" },
+      display = {
+        diff = {
+          enabled = true,
+          provider = "default",
+        },
       },
     },
+    keys = {
+      { "<leader>ci", ":CodeCompanion ",               mode = { "n", "v" }, desc = "Inline Prompt" },
+      { "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "Inline Actions" },
+    },
+  },
 }
