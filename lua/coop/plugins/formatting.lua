@@ -93,20 +93,20 @@ return {
   --     vim.g.matchup_matchparen_offscreen = { method = "status" }
   --   end,
   -- },
-  {
-    "echasnovski/mini.indentscope",
-    version = "*",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = function()
-      local indentscope = require("mini.indentscope")
-      return {
-        symbol = "│",
-        options = { try_as_border = true },
-        draw = {
-          delay = 150,
-          animation = indentscope.gen_animation.none(),
-        },
-      }
-    end,
-  },
+  -- {
+  --   "echasnovski/mini.indentscope",
+  --   version = "*",
+  --   event = { "BufReadPost", "BufNewFile" },
+  --   opts = function()
+  --     local indentscope = require("mini.indentscope")
+  --     return {
+  --       symbol = "│",
+  --       options = { try_as_border = true },
+  --       draw = {
+  --         delay = 150,
+  --         animation = indentscope.gen_animation.none(),
+  --       },
+  --     }
+  --   end,
+  -- },
 }

@@ -2,12 +2,19 @@ local is_termux = vim.env.PREFIX and vim.env.PREFIX:match("com%.termux") ~= nil
 if not vim.env.XDG_RUNTIME_DIR and is_termux then
   vim.env.XDG_RUNTIME_DIR = vim.env.TMPDIR or "/data/data/com.termux/files/usr/tmp"
 end
+
+-- Ensure Mason bin directory is in PATH for native tool discovery
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+if vim.fn.isdirectory(mason_bin) == 1 and not vim.env.PATH:find(mason_bin, 1, true) then
+  vim.env.PATH = vim.env.PATH .. ":" .. mason_bin
+end
 vim.opt.statusline = "%f %m %= %{%v:lua.vim.lsp.status()%} %l:%c"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.opt.confirm = true
+vim.opt.shortmess:append("I")
 
 vim.g.autoformat = true
 

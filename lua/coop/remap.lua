@@ -1,6 +1,6 @@
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>so", [[:restart!<CR>]], { desc = "Restart nvim" })
-vim.keymap.set("n", "<leader>db", [[:Dashboard<CR>]], { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>db", [[:Dashboard<CR>]], { desc = "Open dashboard" })
 
 -- Auto-indent on empty/blank lines when entering insert mode
 vim.keymap.set("n", "i", function()
@@ -109,7 +109,95 @@ vim.keymap.set(
 )
 
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
-vim.keymap.set("n", "<leader>n", [[:Telescope noice<CR>]], { desc = "Open notifications (noice)" })
+vim.keymap.set("n", "<leader>n", function()
+  local ok_p, pickers = pcall(require, "telescope.pickers")
+  local ok_f, finders = pcall(require, "telescope.finders")
+  local ok_c, conf = pcall(require, "telescope.config")
+  local ok_pr, previewers = pcall(require, "telescope.previewers")
+  local ok_e, entry_display = pcall(require, "telescope.pickers.entry_display")
+
+  if not (ok_p and ok_f and ok_c and ok_pr and ok_e) then
+    vim.notify("Telescope not loaded", vim.log.levels.WARN)
+    return
+  end
+
+  local history = _G._notif_history or {}
+  if #history == 0 then
+    vim.notify("No notification history", vim.log.levels.INFO)
+    return
+  end
+
+  local displayer = entry_display.create({
+    separator = " ",
+    items = {
+      { width = 8 },
+      { width = 7 },
+      { remaining = true },
+    },
+  })
+
+  local lvl_map = {
+    [vim.log.levels.ERROR] = { tag = "ERROR", hl = "DiagnosticError" },
+    [vim.log.levels.WARN] = { tag = "WARN ", hl = "DiagnosticWarn" },
+    [vim.log.levels.INFO] = { tag = "INFO ", hl = "DiagnosticInfo" },
+    [vim.log.levels.DEBUG] = { tag = "DEBUG", hl = "DiagnosticHint" },
+    [vim.log.levels.TRACE] = { tag = "TRACE", hl = "Comment" },
+  }
+
+  local make_display = function(entry)
+    local item = entry.value
+    local t_str = os.date("%H:%M:%S", item.time or os.time())
+    local l_info = lvl_map[item.level] or { tag = "INFO ", hl = "DiagnosticInfo" }
+    local first_line = item.msg:match("^[^\r\n]+") or item.msg
+    return displayer({
+      { t_str, "Comment" },
+      { "[" .. l_info.tag .. "]", l_info.hl },
+      { first_line, "Normal" },
+    })
+  end
+
+  pickers.new({}, {
+    prompt_title = "Notification History",
+    finder = finders.new_table({
+      results = history,
+      entry_maker = function(item)
+        local first_line = item.msg:match("^[^\r\n]+") or item.msg
+        return {
+          value = item,
+          display = make_display,
+          ordinal = (item.msg or "") .. " " .. tostring(item.level or ""),
+        }
+      end,
+    }),
+    sorter = conf.values.generic_sorter({}),
+    previewer = previewers.new_buffer_previewer({
+      title = "Notification Content",
+      define_preview = function(self, entry)
+        local lines = {}
+        for line in (entry.value.msg .. "\n"):gmatch("([^\r\n]*)\r?\n") do
+          lines[#lines + 1] = line
+        end
+        while #lines > 0 and lines[#lines] == "" do
+          lines[#lines] = nil
+        end
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+      end,
+    }),
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection and selection.value then
+          vim.fn.setreg("+", selection.value.msg)
+          vim.notify("Copied notification to clipboard", vim.log.levels.INFO)
+        end
+      end)
+      return true
+    end,
+  }):find()
+end, { desc = "Notification history (Telescope)" })
 
 vim.keymap.set("n", "<leader>z", [[:Telescope colorscheme<CR>]], { desc = "open colorscheme" })
 

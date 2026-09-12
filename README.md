@@ -17,8 +17,8 @@
 | Plugin | Purpose |
 | :--- | :--- |
 | [lazy.nvim](https://github.com/folke/lazy.nvim) | Plugin manager |
-| [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | LSP configuration |
-| [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/tool installer |
+| Native `vim.lsp` (0.11+) | Built-in LSP client configuration & management |
+| [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/tool installer (lazy-loaded on command) |
 | [blink.cmp](https://github.com/Saghen/blink.cmp) | High-performance completion engine |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax parsing & highlighting |
 | [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter syntax-aware text objects |
@@ -50,9 +50,9 @@
 | Plugin | Purpose |
 | :--- | :--- |
 | [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Statusline with tmux window integration |
-| [noice.nvim](https://github.com/folke/noice.nvim) | Minimal cmdline, popups & messages |
-| [nvim-notify](https://github.com/rcarriga/nvim-notify) | Notification popups |
-| [dashboard-nvim](https://github.com/nvimdev/dashboard-nvim) | Fast startup dashboard |
+| [noice.nvim](https://github.com/folke/noice.nvim) | Minimal popup cmdline & message routing |
+| Custom `vim.notify` | Stacking notifications one line above lualine (up to 3 concurrent, full height for multiline) |
+| Custom Dashboard | Fast, zero-dependency startup dashboard |
 | [nvim-highlight-colors](https://github.com/brenoprata10/nvim-highlight-colors) | Color preview highlighter |
 | [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | File icons |
 
@@ -117,7 +117,7 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | `-` | n | Open parent directory (oil.nvim) |
 | `<leader>l` | n | Open lazy.nvim panel |
 | `<leader>z` | n | Colorscheme picker (Telescope) |
-| `<leader>n` | n | Notification history (Noice / Telescope) |
+| `<leader>n` | n | Notification history (Telescope) |
 | `<leader>so` | n | Restart Neovim (`:restart!`) |
 | `<leader>rs` | n/v | Global find-and-replace word / visual selection |
 | `<leader>;` | n | Append semicolon at end of line |
@@ -295,7 +295,7 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 - Automatic theme hot-reloading via `~/.cache/nvim-live-theme` and `~/.config/custom/current/`
 - Markdown `<mark>` tag concealment with customizable highlight group
 - Tmux statusbar toggle (hides tmux status while nvim is active, restores on leave)
-- Buffer save notifications (`BufWritePost`)
+- Stacking notifications one line above lualine (up to 3 concurrent; multi-line messages display at full height)
 
 ## Cross-Platform Architecture & Agentic Coding Directives (Termux vs Desktop Linux)
 
