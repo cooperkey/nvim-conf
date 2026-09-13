@@ -22,7 +22,11 @@ local name_map = {
   ["matte-black-v1"] = "matteblack",
   ["flexoki-light-v1"] = "flexoki-light",
   ["ristretto"] = "monokai-pro-ristretto",
-  ["ristretto-v1"] = "monokai-pro-ristretto",
+  ["snow"] = "snow",
+  ["wons"] = "darkthrone",
+  ["e-ink"] = "e-ink",
+  ["e-ink-light"] = "e-ink",
+  ["e-ink-dark"] = "e-ink",
 }
 
 function M.get_specs()
