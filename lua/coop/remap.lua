@@ -28,24 +28,27 @@ vim.keymap.set("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 
 -- textobjects from treesitter
-vim.keymap.set({ "x", "o" }, "ai", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
-end)
-vim.keymap.set({ "x", "o" }, "ii", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
-end)
-vim.keymap.set({ "x", "o" }, "af", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-end)
-vim.keymap.set({ "x", "o" }, "if", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-end)
-vim.keymap.set({ "x", "o" }, "ac", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@comment.outer", "textobjects")
-end)
-vim.keymap.set({ "x", "o" }, "ic", function()
-  require("nvim-treesitter-textobjects.select").select_textobject("@comment.inner", "textobjects")
-end)
+local textobjects = {
+  ["af"] = { query = "@function.outer", desc = "around function" },
+  ["if"] = { query = "@function.inner", desc = "inside function" },
+  ["ai"] = { query = "@conditional.outer", desc = "around conditional" },
+  ["ii"] = { query = "@conditional.inner", desc = "inside conditional" },
+  ["ac"] = { query = "@comment.outer", desc = "around comment" },
+  ["ic"] = { query = "@comment.inner", desc = "inside comment" },
+  ["al"] = { query = "@loop.outer", desc = "around loop" },
+  ["il"] = { query = "@loop.inner", desc = "inside loop" },
+  ["aa"] = { query = "@parameter.outer", desc = "around argument/parameter" },
+  ["ia"] = { query = "@parameter.inner", desc = "inside argument/parameter" },
+  ["aC"] = { query = "@call.outer", desc = "around call" },
+  ["iC"] = { query = "@call.inner", desc = "inside call (all arguments)" },
+
+}
+
+for key, obj in pairs(textobjects) do
+  vim.keymap.set({ "x", "o" }, key, function()
+    require("nvim-treesitter-textobjects.select").select_textobject(obj.query, "textobjects")
+  end, { desc = obj.desc })
+end
 
 -- Clear search highlight on single Escape in Normal mode
 vim.keymap.set({ "i", "n", "s" }, "<esc>", function()
@@ -150,9 +153,9 @@ vim.keymap.set("n", "<leader>n", function()
     local l_info = lvl_map[item.level] or { tag = "INFO ", hl = "DiagnosticInfo" }
     local first_line = item.msg:match("^[^\r\n]+") or item.msg
     return displayer({
-      { t_str, "Comment" },
+      { t_str,                    "Comment" },
       { "[" .. l_info.tag .. "]", l_info.hl },
-      { first_line, "Normal" },
+      { first_line,               "Normal" },
     })
   end
 
@@ -309,11 +312,11 @@ end, { desc = "Fenced code block (Markdown)" })
 
 vim.keymap.set("n", "<leader>mc", function()
   local choices = {
-    { name = "Yellow/Orange (Warning)", group = "DiagnosticWarn" },
-    { name = "Red (Error)", group = "DiagnosticError" },
-    { name = "Blue (Info)", group = "DiagnosticInfo" },
-    { name = "Green (String)", group = "String" },
-    { name = "Teal (Hint)", group = "DiagnosticHint" },
+    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
+    { name = "Red (Error)",              group = "DiagnosticError" },
+    { name = "Blue (Info)",              group = "DiagnosticInfo" },
+    { name = "Green (String)",           group = "String" },
+    { name = "Teal (Hint)",              group = "DiagnosticHint" },
     { name = "Magenta/Purple (Special)", group = "Special" },
   }
   vim.ui.select(choices, {
@@ -754,9 +757,9 @@ vim.keymap.set("n", "<leader>k", function()
       display = function(_)
         return displayer({
           { m_str, m_hl },
-          { lhs, "Special" },
-          { attr, "Comment" },
-          { desc, "Normal" },
+          { lhs,   "Special" },
+          { attr,  "Comment" },
+          { desc,  "Normal" },
         })
       end,
     }, {})

@@ -5,7 +5,7 @@ return {
     priority = 1000,
     config = function()
       vim.opt.background = "dark"
-      pcall(vim.cmd.colorscheme, "darkthrone")
+      pcall(vim.cmd.colorscheme, "dracula")
       vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "*",
         callback = function()

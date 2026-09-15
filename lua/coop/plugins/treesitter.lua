@@ -69,7 +69,19 @@ return {
     init = function()
       vim.g.no_plugin_maps = true
     end,
-    config = function() end,
+    opts = {
+      select = {
+        lookahead = true,
+        selection_modes = {
+          ["@function.outer"] = "V",
+          ["@conditional.outer"] = "V",
+          ["@class.outer"] = "V",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter-textobjects").setup(opts)
+    end,
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
