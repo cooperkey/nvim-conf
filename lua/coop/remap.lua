@@ -810,3 +810,15 @@ end, { desc = "Close other buffers" })
 -- fugitive for merge conflicts
 vim.keymap.set("n", "gu", "<cmd>diffget //2<cr>", { desc = "accept local files for merge" })
 vim.keymap.set("n", "gh", "<cmd>diffget //3<cr>", { desc = "accept remote files for merge" })
+
+-- tmux-sessionizer project navigation
+vim.keymap.set("n", "<C-f>", function()
+  if vim.env.TMUX ~= nil and vim.fn.executable("tmux-sessionizer") == 1 then
+    vim.cmd("silent !tmux neww tmux-sessionizer")
+  elseif vim.fn.executable("tmux-sessionizer") == 1 then
+    vim.cmd("terminal tmux-sessionizer")
+  else
+    vim.notify("tmux-sessionizer executable not found in PATH", vim.log.levels.WARN)
+  end
+end, { desc = "Switch project (tmux-sessionizer)" })
+

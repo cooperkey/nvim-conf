@@ -171,6 +171,7 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | :--- | :---: | :--- |
 | `<leader><leader>` | n | Find files in context directory (Telescope) |
 | `<C-p>` | n | Git files in context directory (Telescope) |
+| `<C-f>` | n | Switch project session (`tmux-sessionizer`) |
 | `<leader>/` | n | Live grep in context directory (Telescope) |
 | `<leader>gw` | n | Grep word under cursor in context directory (Telescope) |
 | `<leader>k` | n | Keymap catalogue browser (Telescope, color-coded) |
