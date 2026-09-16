@@ -122,6 +122,40 @@ return {
         desc = "Open fugitive git panel",
       },
     },
+    init = function()
+      local fugitive_group = vim.api.nvim_create_augroup("coop_fugitive_buffer_maps", { clear = true })
+      vim.api.nvim_create_autocmd("BufWinEnter", {
+        group = fugitive_group,
+        pattern = "*",
+        callback = function(ev)
+          if vim.bo[ev.buf].filetype ~= "fugitive" then
+            return
+          end
+
+          local opts = { buffer = ev.buf, remap = false, silent = true }
+
+          -- Push upstream
+          vim.keymap.set("n", "<leader>p", function()
+            ensure_ssh_agent()
+            vim.cmd.Git("push")
+          end, vim.tbl_extend("force", opts, { desc = "Git push" }))
+
+          -- Pull with mandatory rebase
+          vim.keymap.set("n", "<leader>P", function()
+            ensure_ssh_agent()
+            vim.cmd.Git({ "pull", "--rebase" })
+          end, vim.tbl_extend("force", opts, { desc = "Git pull --rebase" }))
+
+          -- Push and set upstream tracking branch interactively
+          vim.keymap.set(
+            "n",
+            "<leader>t",
+            ":Git push -u origin ",
+            vim.tbl_extend("force", opts, { silent = false, desc = "Git push set upstream" })
+          )
+        end,
+      })
+    end,
   },
   {
     "lewis6991/gitsigns.nvim",

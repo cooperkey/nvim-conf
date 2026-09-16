@@ -1,4 +1,3 @@
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open oil (Explorer)" })
 vim.keymap.set("n", "<leader>so", [[:restart!<CR>]], { desc = "Restart nvim" })
 vim.keymap.set("n", "<leader>db", [[:Dashboard<CR>]], { desc = "Open dashboard" })
 
@@ -80,7 +79,7 @@ vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "resize 
 vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "resize increase window width" })
 -- move highlighted part
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move highlighted part down" })
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part down" })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move highlighted part up" })
 
 vim.keymap.set("v", "<", "<gv", { desc = "indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "indent right and reselect" })
@@ -218,125 +217,7 @@ vim.keymap.set("n", "-", function()
   require("oil").open()
 end, { desc = "Open parent dir (oil)" })
 
--- ── 5. Markdown Workflow Keymaps ──────────────────────────────────────────
--- Global Markdown Shortcuts
-vim.keymap.set(
-  "v",
-  "<leader>h",
-  "<esc>`>a</mark><esc>`<i<mark><esc>",
-  { desc = "Highlight selection (Markdown)", nowait = true }
-)
-vim.keymap.set(
-  "n",
-  "<leader>h",
-  "viw<esc>`>a</mark><esc>`<i<mark><esc>",
-  { desc = "Highlight word (Markdown)", nowait = true }
-)
-
-vim.keymap.set("v", "<leader>i", "<esc>`>a_<esc>`<i_<esc>", { desc = "Italic selection (Markdown)" })
-vim.keymap.set("n", "<leader>i", "viw<esc>`>a_<esc>`<i_<esc>", { desc = "Italic word (Markdown)" })
-
-vim.keymap.set("v", "<leader>b", "<esc>`>a**<esc>`<i**<esc>", { desc = "Bold selection (Markdown)" })
-vim.keymap.set("n", "<leader>b", "viw<esc>`>a**<esc>`<i**<esc>", { desc = "Bold word (Markdown)" })
-
-vim.keymap.set("v", "<leader>bi", "<esc>`>a**_<esc>`<i_**<esc>", { desc = "Bold/Italic selection (Markdown)" })
-vim.keymap.set("n", "<leader>bi", "viw<esc>`>a**_<esc>`<i_**<esc>", { desc = "Bold/Italic word (Markdown)" })
-
-vim.keymap.set("v", "<leader>c", "<esc>`>a`<esc>`<i`<esc>", { desc = "Inline code selection (Markdown)" })
-vim.keymap.set("n", "<leader>c", "viw<esc>`>a`<esc>`<i`<esc>", { desc = "Inline code word (Markdown)" })
-
-vim.keymap.set("v", "<leader>s", "<esc>`>a~~<esc>`<i~~<esc>", { desc = "Strikethrough selection (Markdown)" })
-vim.keymap.set("n", "<leader>s", "viw<esc>`>a~~<esc>`<i~~<esc>", { desc = "Strikethrough word (Markdown)" })
-
-vim.keymap.set("v", "<leader>ml", "<esc>`>a]()<esc>`<i[<esc>f(a", { desc = "Convert to link (Markdown)" })
-vim.keymap.set("n", "<leader>ml", "viw<esc>`>a]()<esc>`<i[<esc>f(a", { desc = "Convert word to link (Markdown)" })
-
-vim.keymap.set({ "n", "v" }, "<leader>x", function()
-  local mode = vim.api.nvim_get_mode().mode
-  local start_line, end_line
-
-  if mode:sub(1, 1) == "v" or mode:sub(1, 1) == "V" or mode == "\22" then
-    vim.cmd("normal! \27")
-    start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
-    end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
-  else
-    start_line = vim.api.nvim_win_get_cursor(0)[1]
-    end_line = start_line
-  end
-
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-  local updated_lines = {}
-  local count_checked = 0
-  local count_unchecked = 0
-  local count_created = 0
-
-  for _, line in ipairs(lines) do
-    if line:match("%-%s*%[ %]") then
-      line = line:gsub("%-%s*%[ %]", "- [x]", 1)
-      count_checked = count_checked + 1
-    elseif line:match("%-%s*%[x%]") or line:match("%-%s*%[X%]") then
-      line = line:gsub("%-%s*%[x%]", "- [ ]", 1)
-      line = line:gsub("%-%s*%[X%]", "- [ ]", 1)
-      count_unchecked = count_unchecked + 1
-    else
-      line = "- [ ] " .. line:gsub("^%s*", "")
-      count_created = count_created + 1
-    end
-    table.insert(updated_lines, line)
-  end
-
-  vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, updated_lines)
-
-  if #lines == 1 then
-    if count_checked > 0 then
-      vim.notify("✓ Checklist item checked", vim.log.levels.INFO)
-    elseif count_unchecked > 0 then
-      vim.notify("○ Checklist item unchecked", vim.log.levels.INFO)
-    else
-      vim.notify("+ Checklist item created", vim.log.levels.INFO)
-    end
-  else
-    vim.notify("Checklist updated (" .. #lines .. " lines)", vim.log.levels.INFO)
-  end
-end, { desc = "Toggle Markdown checklist" })
-
-vim.keymap.set("v", "<leader>cb", function()
-  vim.cmd("normal! \27")
-  local start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
-  local end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
-  vim.fn.append(end_line, "```")
-  vim.fn.append(start_line - 1, "```")
-  vim.api.nvim_win_set_cursor(0, { start_line, 3 })
-  vim.cmd("startinsert!")
-end, { desc = "Fenced code block (Markdown)" })
-
-vim.keymap.set("n", "<leader>mc", function()
-  local choices = {
-    { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
-    { name = "Red (Error)",              group = "DiagnosticError" },
-    { name = "Blue (Info)",              group = "DiagnosticInfo" },
-    { name = "Green (String)",           group = "String" },
-    { name = "Teal (Hint)",              group = "DiagnosticHint" },
-    { name = "Magenta/Purple (Special)", group = "Special" },
-  }
-  vim.ui.select(choices, {
-    prompt = "Select Markdown Highlight Color:",
-    format_item = function(item)
-      return item.name
-    end,
-  }, function(choice)
-    if not choice then
-      return
-    end
-    vim.g.markdown_highlight_group = choice.group
-    if _G.set_markdown_highlight then
-      _G.set_markdown_highlight()
-    end
-    vim.notify("✓ Markdown highlight color set to: " .. choice.name, vim.log.levels.INFO)
-  end)
-end, { desc = "Choose Highlight Color (Markdown)" })
-
--- Buffer-local Markdown Keymaps & Helpers
+-- ── 5. Markdown Workflow Keymaps (Buffer-Local) ──────────────────────────
 local function apply_md_keymaps(buf)
   if not vim.api.nvim_buf_is_valid(buf) then
     return
@@ -345,9 +226,111 @@ local function apply_md_keymaps(buf)
     return
   end
 
-  local function map(mode, lhs, rhs, desc)
-    vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
+  local function map(mode, lhs, rhs, desc, opts)
+    local full_opts = vim.tbl_extend("force", { buffer = buf, desc = desc, silent = true }, opts or {})
+    vim.keymap.set(mode, lhs, rhs, full_opts)
   end
+
+  -- Formatting shortcuts (buffer-local to eliminate global leader latency)
+  map("v", "<leader>h", "<esc>`>a</mark><esc>`<i<mark><esc>", "Highlight selection (Markdown)", { nowait = true })
+  map("n", "<leader>h", "viw<esc>`>a</mark><esc>`<i<mark><esc>", "Highlight word (Markdown)", { nowait = true })
+  map("v", "<leader>i", "<esc>`>a_<esc>`<i_<esc>", "Italic selection (Markdown)")
+  map("n", "<leader>i", "viw<esc>`>a_<esc>`<i_<esc>", "Italic word (Markdown)")
+  map("v", "<leader>b", "<esc>`>a**<esc>`<i**<esc>", "Bold selection (Markdown)")
+  map("n", "<leader>b", "viw<esc>`>a**<esc>`<i**<esc>", "Bold word (Markdown)")
+  map("v", "<leader>bi", "<esc>`>a**_<esc>`<i_**<esc>", "Bold/Italic selection (Markdown)")
+  map("n", "<leader>bi", "viw<esc>`>a**_<esc>`<i_**<esc>", "Bold/Italic word (Markdown)")
+  map("v", "<leader>c", "<esc>`>a`<esc>`<i`<esc>", "Inline code selection (Markdown)")
+  map("n", "<leader>c", "viw<esc>`>a`<esc>`<i`<esc>", "Inline code word (Markdown)")
+  map("v", "<leader>s", "<esc>`>a~~<esc>`<i~~<esc>", "Strikethrough selection (Markdown)")
+  map("n", "<leader>s", "viw<esc>`>a~~<esc>`<i~~<esc>", "Strikethrough word (Markdown)")
+  map("v", "<leader>ml", "<esc>`>a]()<esc>`<i[<esc>f(a", "Convert to link (Markdown)")
+  map("n", "<leader>ml", "viw<esc>`>a]()<esc>`<i[<esc>f(a", "Convert word to link (Markdown)")
+
+  map({ "n", "v" }, "<leader>x", function()
+    local mode = vim.api.nvim_get_mode().mode
+    local start_line, end_line
+
+    if mode:sub(1, 1) == "v" or mode:sub(1, 1) == "V" or mode == "\22" then
+      vim.cmd("normal! \27")
+      start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
+      end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
+    else
+      start_line = vim.api.nvim_win_get_cursor(0)[1]
+      end_line = start_line
+    end
+
+    local lines = vim.api.nvim_buf_get_lines(buf, start_line - 1, end_line, false)
+    local updated_lines = {}
+    local count_checked = 0
+    local count_unchecked = 0
+    local count_created = 0
+
+    for _, line in ipairs(lines) do
+      if line:match("%-%s*%[ %]") then
+        line = line:gsub("%-%s*%[ %]", "- [x]", 1)
+        count_checked = count_checked + 1
+      elseif line:match("%-%s*%[x%]") or line:match("%-%s*%[X%]") then
+        line = line:gsub("%-%s*%[x%]", "- [ ]", 1)
+        line = line:gsub("%-%s*%[X%]", "- [ ]", 1)
+        count_unchecked = count_unchecked + 1
+      else
+        line = "- [ ] " .. line:gsub("^%s*", "")
+        count_created = count_created + 1
+      end
+      table.insert(updated_lines, line)
+    end
+
+    vim.api.nvim_buf_set_lines(buf, start_line - 1, end_line, false, updated_lines)
+
+    if #lines == 1 then
+      if count_checked > 0 then
+        vim.notify("✓ Checklist item checked", vim.log.levels.INFO)
+      elseif count_unchecked > 0 then
+        vim.notify("○ Checklist item unchecked", vim.log.levels.INFO)
+      else
+        vim.notify("+ Checklist item created", vim.log.levels.INFO)
+      end
+    else
+      vim.notify("Checklist updated (" .. #lines .. " lines)", vim.log.levels.INFO)
+    end
+  end, "Toggle Markdown checklist")
+
+  map("v", "<leader>cb", function()
+    vim.cmd("normal! \27")
+    local start_line = math.min(vim.fn.line("'<"), vim.fn.line("'>"))
+    local end_line = math.max(vim.fn.line("'<"), vim.fn.line("'>"))
+    vim.fn.append(end_line, "```")
+    vim.fn.append(start_line - 1, "```")
+    vim.api.nvim_win_set_cursor(0, { start_line, 3 })
+    vim.cmd("startinsert!")
+  end, "Fenced code block (Markdown)")
+
+  map("n", "<leader>mc", function()
+    local choices = {
+      { name = "Yellow/Orange (Warning)",  group = "DiagnosticWarn" },
+      { name = "Red (Error)",              group = "DiagnosticError" },
+      { name = "Blue (Info)",              group = "DiagnosticInfo" },
+      { name = "Green (String)",           group = "String" },
+      { name = "Teal (Hint)",              group = "DiagnosticHint" },
+      { name = "Magenta/Purple (Special)", group = "Special" },
+    }
+    vim.ui.select(choices, {
+      prompt = "Select Markdown Highlight Color:",
+      format_item = function(item)
+        return item.name
+      end,
+    }, function(choice)
+      if not choice then
+        return
+      end
+      vim.g.markdown_highlight_group = choice.group
+      if _G.set_markdown_highlight then
+        _G.set_markdown_highlight()
+      end
+      vim.notify("✓ Markdown highlight color set to: " .. choice.name, vim.log.levels.INFO)
+    end)
+  end, "Choose Highlight Color (Markdown)")
 
   local function set_heading(level)
     local line = vim.api.nvim_get_current_line()

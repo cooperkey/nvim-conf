@@ -207,6 +207,9 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | `<leader>gg` / `<leader>gs` | n | Open Fugitive git status panel |
+| `<leader>p` | n | Git push (inside Fugitive status buffer) |
+| `<leader>P` | n | Git pull `--rebase` (inside Fugitive status buffer) |
+| `<leader>t` | n | Git push `-u origin ` with branch prompt (inside Fugitive status buffer) |
 | `:SSHAdd` | cmd | Load SSH key into agent (`ssh-add`) |
 
 ### LSP (active on LspAttach)
