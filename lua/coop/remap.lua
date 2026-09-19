@@ -524,6 +524,40 @@ local function apply_md_keymaps(buf)
     end)
   end, "Insert table (Markdown)")
 
+  local function generate_toc()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local has_toc = false
+    for _, line in ipairs(lines) do
+      if line:match("<!--%s*toc%s*-->") then
+        has_toc = true
+        break
+      end
+    end
+
+    if not has_toc then
+      local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+      vim.api.nvim_buf_set_lines(0, row, row, false, { "<!-- toc -->", "" })
+    end
+
+    if vim.fn.executable("markdown-toc") ~= 1 then
+      vim.notify("markdown-toc executable not found in PATH", vim.log.levels.ERROR)
+      return
+    end
+
+    vim.cmd("write")
+    local file = vim.api.nvim_buf_get_name(0)
+    local out = vim.fn.system({ "markdown-toc", "-i", file })
+    if vim.v.shell_error == 0 then
+      vim.cmd("edit!")
+      vim.notify("✓ Table of contents updated", vim.log.levels.INFO)
+    else
+      vim.notify("markdown-toc failed: " .. out, vim.log.levels.ERROR)
+    end
+  end
+
+  map("n", "<leader>mT", generate_toc, "Insert / update Table of Contents (Markdown)")
+  vim.api.nvim_buf_create_user_command(buf, "MarkdownToc", generate_toc, { desc = "Generate / update TOC" })
+
   map("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", "Toggle Markdown Preview")
   map("n", "<leader>mP", "<cmd>MarkdownPreviewStop<cr>", "Stop Markdown Preview")
 

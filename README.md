@@ -4,7 +4,7 @@
 
 - Neovim >= 0.10
 - git
-- Node.js + npm (Prettier, pyright, typescript-language-server, markdown-preview)
+- Node.js + npm (Prettier, pyright, typescript-language-server, markdown-preview, markdown-toc, markdownlint-cli2)
 - Python 3 + pip (isort, black)
 - Rust + cargo (blink.cmp build, rust-analyzer, rustfmt)
 - C/C++ compiler + tools (clangd, clang-format)
@@ -20,6 +20,7 @@
 | Native `vim.lsp` (0.11+) | Built-in LSP client configuration & management |
 | [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP/tool installer (lazy-loaded on command) |
 | [blink.cmp](https://github.com/Saghen/blink.cmp) | High-performance completion engine |
+| [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | Preconfigured multi-language snippet collection |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax parsing & highlighting |
 | [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Treesitter syntax-aware text objects |
 | [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) | Sticky code context at top of window |
@@ -39,6 +40,7 @@
 | Plugin | Purpose |
 | :--- | :--- |
 | [conform.nvim](https://github.com/stevearc/conform.nvim) | Code formatting engine |
+| [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Asynchronous linter integration |
 | [nvim-surround](https://github.com/kylechui/nvim-surround) | Surround text objects |
 | [mini.pairs](https://github.com/echasnovski/mini.pairs) | Auto-close brackets & quotes |
 | [mini.indentscope](https://github.com/echasnovski/mini.indentscope) | Indent scope guide line |
@@ -69,6 +71,8 @@
 | :--- | :--- |
 | [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | Inline Markdown rendering & LaTeX |
 | [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) | Browser preview |
+| `markdownlint-cli2` | Static analysis and style linting (via `nvim-lint`) |
+| `markdown-toc` | Table of contents generator (via `conform.nvim` / `:MarkdownToc`) |
 
 ### Colorschemes (lazy-loaded)
 
@@ -96,13 +100,20 @@ Configured via native `vim.lsp.config` (Neovim 0.10+ API):
 | :--- | :--- |
 | `stylua` | Lua |
 | `isort` + `black` | Python |
-| `prettierd` / `prettier` | JS · TS · JSON · HTML · CSS · Markdown · YAML |
+| `prettierd` / `prettier` | JS · TS · JSON · HTML · CSS · YAML |
+| `prettierd` / `prettier` + `markdown-toc` | Markdown (formats + updates `<!-- toc -->`) |
 | `rustfmt` | Rust |
 | `clang-format` | C / C++ |
 | `shfmt` | Bash / Zsh / Shell |
 | `trim_whitespace` | Fallback for all filetypes |
 
 Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-space indentation**).
+
+## Linters (nvim-lint)
+
+| Linter | Language |
+| :--- | :--- |
+| `markdownlint-cli2` | Markdown |
 
 ## Keymaps
 
@@ -269,6 +280,7 @@ Default formatters enforce **2-space indentation** (Python enforces PEP 8 **4-sp
 | `gl` / `<leader>mg` | n | Follow link under cursor (URL, file, or `#anchor`) |
 | `]]` / `[[` | n | Jump to next / previous heading |
 | `<leader>mt` | n | Generate and insert markdown table |
+| `<leader>mT` / `:MarkdownToc` | n | Insert `<!-- toc -->` and generate / update Table of Contents |
 | `<leader>mw` | n | Display word, line, and character count |
 
 ### Unicode Input
@@ -334,7 +346,10 @@ local is_android = (vim.fn.has("android") == 1)
 - **Orphan Client Filtering**: A buffer attached to an LSP is valid if it is loaded AND either `buflisted` OR currently displayed in any window (`vim.fn.bufwinid(bufnr) ~= -1`). Do not terminate LSPs serving unlisted diff, fugitive, or preview buffers.
 - **API Modernization**: Use Neovim 0.12+ public APIs (e.g. `vim.lsp.get_configs({ enabled = true, filetype = ft })`) while retaining backward-compatible fallbacks for Neovim 0.10/0.11. Never bind directly to private tables (e.g. `vim.lsp.config._configs`) without public fallbacks.
 
-### 5. Pathing & Binaries
-- Do not assume absolute paths (`/usr/bin` vs `/data/data/com.termux/files/usr/bin`).
-- Always check binary presence via `vim.fn.executable(...) == 1` before invoking external CLI tools or daemons.
+### 5. Pathing, Binaries & Runtime Quirks
+- **Binary Presence**: Always check binary presence via `vim.fn.executable(...) == 1` before invoking external CLI tools or daemons.
+- **Path Portability**: Never hardcode absolute system paths (e.g. `/usr/bin` vs `$PREFIX/bin` or `/data/data/com.termux/files/usr/bin`).
+- **Shebangs (`/usr/bin/env`)**: Android rootfs lacks `/usr/bin/env`. Executables installed via npm or Mason that use `#!/usr/bin/env <interp>` fail with `bad interpreter: No such file or directory`. In Termux, run `termux-fix-shebang` on installed npm/mason package binaries or invoke them through their language runtime.
+- **Temporary Directories (`/tmp`)**: The standard `/tmp` path does not exist on Android rootfs; attempts to access `/tmp` produce a read-only filesystem error. Always use `vim.fn.tempname()` or `$TMPDIR` (`/data/data/com.termux/files/usr/tmp`).
+- **C Runtime (glibc vs Bionic)**: Mason packages containing pre-compiled glibc ELF binaries (e.g. `marksman-linux-arm64`) cannot execute on Android Bionic libc (`cannot execute: required file not found`). On Termux, prioritize native packages (`pkg install`), Node/npm packages, or Rust crates built on device.
 

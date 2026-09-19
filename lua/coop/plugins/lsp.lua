@@ -155,6 +155,9 @@ return {
     "Saghen/blink.cmp",
     version = "*",
     build = "cargo build --release",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
     opts = {
       snippets = {
         preset = "default",

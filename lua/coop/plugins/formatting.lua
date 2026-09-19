@@ -47,7 +47,10 @@ return {
         html = { "prettierd", "prettier", stop_after_first = true },
         css = { "prettierd", "prettier", stop_after_first = true },
         scss = { "prettierd", "prettier", stop_after_first = true },
-        markdown = { "prettierd", "prettier", stop_after_first = true },
+        markdown = function(bufnr)
+          local p = require("conform").get_formatter_info("prettierd", bufnr).available and "prettierd" or "prettier"
+          return { p, "markdown-toc" }
+        end,
         yaml = { "prettierd", "prettier", stop_after_first = true },
         rust = { "rustfmt" },
         c = { "clang-format" },
