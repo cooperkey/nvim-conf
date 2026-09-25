@@ -8,7 +8,7 @@
   "black-metal": { "branch": "main", "commit": "3a5522fbc7127c638ac8a98692cb83bbdf3594a9" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "catppuccin": { "branch": "main", "commit": "edefef779ab08ce1a4a404713e3012b0d202bd35" },
-  "codecompanion.nvim": { "branch": "main", "commit": "9833ab677869d0c6d83f58fedb77a53a8a2b23be" },
+  "codecompanion.nvim": { "branch": "main", "commit": "5f8841d9ddc8cfdb202f84ae26b704beb4e14ce8" },
   "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
   "dracula": { "branch": "main", "commit": "ae752c13e95fb7c5f58da4b5123cb804ea7568ee" },
   "e-ink": { "branch": "main", "commit": "a0f003a0c6e2952abd9b73ef89d56c65e6c46f00" },

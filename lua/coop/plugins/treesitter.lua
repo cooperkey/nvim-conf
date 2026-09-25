@@ -18,6 +18,7 @@ return {
         "lua",
         "luadoc",
         "luap",
+        "latex",
         "markdown",
         "markdown_inline",
         "printf",
