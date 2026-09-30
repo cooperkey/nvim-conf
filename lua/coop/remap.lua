@@ -1,4 +1,4 @@
-vim.keymap.set("n", "<leader>so", [[:restart!<CR>]], { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>so", [[:restart<CR>]], { desc = "Restart nvim" })
 vim.keymap.set("n", "<leader>db", [[:Dashboard<CR>]], { desc = "Open dashboard" })
 
 -- Auto-indent on empty/blank lines when entering insert mode
@@ -838,4 +838,3 @@ vim.keymap.set("n", "<C-f>", function()
     vim.notify("tmux-sessionizer executable not found in PATH", vim.log.levels.WARN)
   end
 end, { desc = "Switch project (tmux-sessionizer)" })
-
