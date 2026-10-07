@@ -73,6 +73,35 @@ local function setup_lsp_servers()
   vim.lsp.enable("rust_analyzer")
 
   local servers = {
+    harper_ls = {
+      cmd = { "harper-ls", "--stdio" },
+      filetypes = {
+        "markdown",
+        "text",
+        "rust",
+        "python",
+        "javascript",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "css",
+        "lua",
+        "c",
+        "cpp",
+        "gitcommit",
+      },
+      settings = {
+        ["harper-ls"] = {
+          linters = {
+            SpellCheck = true,
+            SentenceCapitalization = false,
+            LongSentences = false,
+            RepeatedWords = true,
+            Spaces = true,
+          },
+        },
+      },
+    },
     clangd = {
       cmd = {
         "clangd",
@@ -123,7 +152,7 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 local is_android = (vim.fn.has("android") == 1)
-  or (vim.env.PREFIX ~= nil and vim.env.PREFIX:find("com%.termux") ~= nil)
+    or (vim.env.PREFIX ~= nil and vim.env.PREFIX:find("com%.termux") ~= nil)
 
 return {
   {
