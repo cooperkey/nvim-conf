@@ -223,13 +223,21 @@ return {
     },
   },
   {
+    "github/copilot.vim",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    init = function()
+      vim.g.copilot_npx = false
+    end,
+  },
+  {
     "olimorris/codecompanion.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
     opts = {
-      strategies = {
+      interactions = {
         inline = {
           adapter = "copilot",
         },
