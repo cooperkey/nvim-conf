@@ -109,6 +109,38 @@ vim.keymap.set(
   [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]],
   { desc = "Replace selected text in visual mode globally" }
 )
+vim.keymap.set("n", "<leader>rc", [[:%s/\<<C-r><C-w>\>//gI<Left><Left>]], { desc = "Remove word under cursor globally" })
+
+vim.keymap.set("x", "<leader>rv", function()
+  local mode = vim.fn.mode()
+  local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+  local is_single = #lines == 1 and mode == "v"
+  local pattern = is_single and vim.fn.escape(lines[1], [[/\]]) or ""
+  local shifts = is_single and 3 or 4
+  return string.format("<Esc>:'<,'>s/\\%%V%s//gI%s", pattern, string.rep("<Left>", shifts))
+end, { expr = true, desc = "Substitute within visual selection" })
+
+vim.keymap.set("x", "<leader>r=", function()
+  local s, e = vim.fn.line("v"), vim.fn.line(".")
+  if s > e then s, e = e, s end
+  local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false)
+  local lefts, rights = {}, {}
+  local max_col = 0
+  for i, line in ipairs(lines) do
+    local left, right = line:match("^(.-%S)%s*=%s*(.*)$")
+    if left and not left:match("[%+%-*/%%&|^<>=!~]$") and not right:match("^=") then
+      lefts[i], rights[i] = left, right
+      max_col = math.max(max_col, #left)
+    end
+  end
+  if max_col == 0 then return end
+  local fmt = "%-" .. max_col .. "s = %s"
+  for i in pairs(lefts) do
+    lines[i] = string.format(fmt, lefts[i], rights[i])
+  end
+  vim.api.nvim_buf_set_lines(0, s - 1, e, false, lines)
+  vim.api.nvim_feedkeys(vim.keycode("<Esc>"), "nx", false)
+end, { desc = "Align equal signs in selected text" })
 
 vim.keymap.set("n", "<leader>l", [[:Lazy<CR>]], { desc = "open lazy" })
 vim.keymap.set("n", "<leader>n", function()
