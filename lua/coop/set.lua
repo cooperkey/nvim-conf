@@ -15,6 +15,7 @@ vim.g.maplocalleader = " "
 
 vim.opt.confirm = true
 vim.opt.shortmess:append("I")
+vim.opt.iskeyword:append("-")
 
 vim.g.autoformat = true
 
